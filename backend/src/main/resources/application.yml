@@ -11,6 +11,5 @@ spring:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-# Custom application properties
-app:
-  message: Welcome to our Spring Boot application!
+jwt:
+  secret: ${JWT_SECRET:default-secret-key}

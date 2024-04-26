@@ -2,21 +2,45 @@ package com.wahab.backend.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
-
-//This is going to be used for extracting the ccliams ie we want to extract the username from the jwttoken
-// the jwt consistes of 3 areas, the header, the payload and the signnature
+/**
+ * The {@code JwtService} provides essential services for handling JSON Web Tokens (JWTs),
+ * which are crucial for authenticating and authorizing users in the application. This service
+ * includes methods to extract claims such as the username from a JWT. JWTs are structured in
+ * three parts: the header, the payload, and the signature.
+ *
+ * <p>This service utilizes methods to parse and validate JWTs using a secret key encoded in BASE64.
+ * It supports extracting specific claims from the token, which are essential for securing
+ * the application.</p>
+ */
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "uslnzbDMvcK9yr6Dms5VR6Iqv2OGgyKa";
+    /**
+     * The secret key used for signing and verifying the JWT, obtained from an environmental variable.
+     * This approach enhances security by not hard-coding sensitive information directly in the source code.
+     */
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
+    /**
+     * Extracts the username from the JWT.
+     *
+     * @param token the JWT from which the username is to be extracted
+     * @return the username as a String
+     */
     public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
     }
@@ -26,6 +50,55 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    public String generateToken(UserDetails userDetails){
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
+    /**
+     * Generates a JWT token for a given user with additional claims.
+     *
+     * @param extraClaims a map of additional claims to include in the JWT payload
+     * @param userDetails the user details to create a token for, typically includes the username
+     * @return a signed JWT token as a String
+     */
+    public String generateToken(
+        Map<String, Object> extraClaims,
+        UserDetails userDetails
+    ){
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact(); // Build the JWT and serialize it to a compact, URL-safe string
+
+    }
+
+    /**
+     * Checks if the provided JWT is valid for the given user based on username and expiration.
+     */
+     public boolean isTokenValid(String token, UserDetails userDetails){
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token){
+        return extractClaims(token, Claims::getExpiration);
+    }
+
+    /**
+     * Extracts all claims from a given JWT token. This method serves as the foundation
+     * for other methods that require access to the complete claims.
+     *
+     * @param token the JWT token to parse
+     * @return the claims found in the token
+     */
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
@@ -35,6 +108,11 @@ public class JwtService {
                 .getBody();
     }
 
+    /**
+     * Generates a signing key from a base64-encoded string, which is used to verify the JWT's signature.
+     *
+     * @return Key instance used for verifying JWT signatures
+     */
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
