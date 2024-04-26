@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // Configure authorization of requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("").permitAll() // Permit all requests to certain matchers (e.g., public endpoints)
+                        .requestMatchers("api/v1/auth/**").permitAll() // Permit all requests to certain matchers (e.g., public endpoints)
                         .anyRequest().authenticated() // Require authentication for all others requests
                 )
                 // Configure session management to be stateless
