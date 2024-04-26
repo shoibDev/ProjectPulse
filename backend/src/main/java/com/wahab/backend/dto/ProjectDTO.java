@@ -5,7 +5,7 @@ import java.util.List;
 
 public record ProjectDTO(
         Long id,
-        String name,
+        String title,
         LocalDateTime dateCreated,
         LocalDateTime lastUpdated,
         List<Long> userIds,

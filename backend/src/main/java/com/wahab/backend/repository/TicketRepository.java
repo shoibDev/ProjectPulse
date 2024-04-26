@@ -1,4 +1,4 @@
 package com.wahab.backend.repository;
 
-public class TicketRepository {
+public interface TicketRepository {
 }
