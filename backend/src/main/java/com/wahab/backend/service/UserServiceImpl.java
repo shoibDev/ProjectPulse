@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,15 @@ public class UserServiceImpl implements UserService {
                 );
     }
 
+    public UserDTO getPrincipalUser(Principal principal) {
+
+        User user = userRepository.findByEmail(
+                principal.getName()
+        ).orElseThrow(() -> new UsernameNotFoundException("User not found with email"));
+
+        return getUserById(user.getId());
+    }
+
     /**
      * Retrieves all users sorted by last name in ascending order.
      *
@@ -72,7 +82,7 @@ public class UserServiceImpl implements UserService {
      * @param userId the ID of the user to save or update.
      * @param user the user entity containing new or updated data.
      */
-    public void saveUserInfo(Long userId, User user) {
+    public void updateUserInfo(Long userId, User user) {
         userRepository.save(requestBodyUserToEntity(userId, user));
     }
 
@@ -82,7 +92,7 @@ public class UserServiceImpl implements UserService {
      * @param userId the ID of the user to remove.
      */
     @Override
-    public void removeUser(Long userId) {
+    public void deleteUser(Long userId) {
         userRepository.delete(findUserById(userId));
     }
 

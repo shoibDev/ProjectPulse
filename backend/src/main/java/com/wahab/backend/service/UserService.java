@@ -3,6 +3,7 @@ package com.wahab.backend.service;
 import com.wahab.backend.dto.UserDTO;
 import com.wahab.backend.entity.User;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService{
@@ -11,11 +12,13 @@ public interface UserService{
 
     UserDTO getUserById(Long userId);
 
+    UserDTO getPrincipalUser(Principal principal);
+
     List<UserDTO> getAllUsers();
 
-    void saveUserInfo(Long userId, User user);
+    void updateUserInfo(Long userId, User user);
 
-    void removeUser(Long userId);
+    void deleteUser(Long userId);
 
     User requestBodyUserToEntity(Long userId, User user);
 
