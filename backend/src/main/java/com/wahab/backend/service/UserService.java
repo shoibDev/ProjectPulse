@@ -20,6 +20,8 @@ public interface UserService{
 
     void deleteUser(Long userId);
 
-    User requestBodyUserToEntity(Long userId, User user);
+    User DTOToEntity(Long userId, User user);
+
+    List<UserDTO> getUsersExcludingProject(Long projectId);
 
 }

@@ -18,8 +18,7 @@ public class TicketServiceImpl implements TicketService{
     private final ProjectService projectService;
 
     @Override
-    public TicketDTO createTicket(Ticket ticket) {
-
+    public TicketDTO createTicket(TicketDTO ticketDTO) {
 
 
         return null;

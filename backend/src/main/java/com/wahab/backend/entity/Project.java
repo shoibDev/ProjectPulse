@@ -1,9 +1,6 @@
 package com.wahab.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,7 +40,7 @@ public class Project {
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Ticket> tickets = new HashSet<>();
 

@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
      * @param user the user entity containing new or updated data.
      */
     public void updateUserInfo(Long userId, User user) {
-        userRepository.save(requestBodyUserToEntity(userId, user));
+        userRepository.save(DTOToEntity(userId, user));
     }
 
     /**
@@ -103,8 +103,7 @@ public class UserServiceImpl implements UserService {
      * @param user the DTO containing updated user data.
      * @return the updated user entity.
      */
-    @Override
-    public User requestBodyUserToEntity(Long userId, User user) {
+    public User DTOToEntity(Long userId, User user) {
         User entity = findUserById(userId);
 
         entity.setFirstName(user.getFirstName());
@@ -114,5 +113,13 @@ public class UserServiceImpl implements UserService {
         entity.setRole(user.getRole());
 
         return entity;
+    }
+
+    @Override
+    public List<UserDTO> getUsersExcludingProject(Long projectId) {
+        List<User> users = userRepository.findAllByProjectIdNot(projectId);
+        return users.stream()
+                .map(userMapper)
+                .collect(Collectors.toList());
     }
 }

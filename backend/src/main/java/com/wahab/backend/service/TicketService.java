@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TicketService {
 
-    TicketDTO createTicket(Ticket ticket);
+    TicketDTO createTicket(TicketDTO ticketDTO);
 
     Ticket findTicketById(Long ticketId);
 

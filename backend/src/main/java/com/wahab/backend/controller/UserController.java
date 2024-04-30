@@ -2,13 +2,17 @@ package com.wahab.backend.controller;
 
 
 import com.wahab.backend.dto.UserDTO;
+import com.wahab.backend.dto.UserMapper;
 import com.wahab.backend.entity.User;
+import com.wahab.backend.repository.UserRepository;
 import com.wahab.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +20,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @GetMapping("load-Principal")
     public UserDTO getCurrentUser(Principal principal){
@@ -36,6 +42,15 @@ public class UserController {
     @DeleteMapping(path = "/{userId}/delete-user")
     public void delete(@PathVariable("userId") Long userId){
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/exclude-current")
+    public List<UserDTO> findAllUsersExceptCurrent() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmailNot(currentUserEmail)
+                .stream()
+                .map(userMapper)
+                .collect(Collectors.toList());
     }
 
 }
