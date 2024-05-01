@@ -86,7 +86,6 @@ public class ProjectServiceImpl implements ProjectService {
      * @param projectDTO the project DTO containing the updated details
      * @return the updated project as a DTO
      */
-    @Transactional
     @Override
     public ProjectDTO updateProject(ProjectDTO projectDTO) {
         Project existingProject = projectRepository.findById(projectDTO.id())
@@ -106,7 +105,6 @@ public class ProjectServiceImpl implements ProjectService {
      * Deletes a project by its ID.
      * @param projectId the ID of the project to delete
      */
-    @Transactional
     @Override
     public void deleteProjectById(Long projectId) {
         Project project = projectRepository.findById(projectId)

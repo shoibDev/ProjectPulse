@@ -10,11 +10,9 @@ import java.util.Objects;
  * Entity for managing tickets with unique titles and various attributes like priority and status.
  * Each ticket is associated with one project and can be assigned to one user.
  */
+@Builder
 @Getter
 @Setter
-@ToString
-@RequiredArgsConstructor
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

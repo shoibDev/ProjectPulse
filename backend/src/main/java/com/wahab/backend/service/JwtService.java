@@ -32,8 +32,8 @@ public class JwtService {
      * The secret key used for signing and verifying the JWT, obtained from an environmental variable.
      * This approach enhances security by not hard-coding sensitive information directly in the source code.
      */
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
+
+    private final String SECRET_KEY = "uslnzbDMvcK9yr6Dms5VR6Iqv2OGgyKa";
 
     /**
      * Extracts the username from the JWT.

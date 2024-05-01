@@ -15,13 +15,11 @@ import java.util.Set;
  * Entity for managing projects with automatic timestamping for creation and updates.
  * Projects can have multiple users and can contain multiple tickets.
  */
+@Builder
 @Getter
 @Setter
-@ToString
-@RequiredArgsConstructor
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Project {
 
@@ -37,11 +35,9 @@ public class Project {
     private LocalDateTime lastUpdated;
 
     @ManyToMany(mappedBy = "projects")
-    @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    @ToString.Exclude
     private Set<Ticket> tickets = new HashSet<>();
 
     @Override

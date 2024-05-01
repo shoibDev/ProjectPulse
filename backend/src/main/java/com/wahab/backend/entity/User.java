@@ -18,11 +18,9 @@ import java.util.Set;
  * Entity representing a user, implementing Spring Security UserDetails for authentication.
  * Users can participate in multiple projects and can be assigned multiple tickets.
  */
+@Builder
 @Getter
 @Setter
-@ToString
-@RequiredArgsConstructor
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -53,11 +51,9 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    @ToString.Exclude
     private Set<Project> projects = new HashSet<>();
 
     @OneToMany(mappedBy = "assignedUser")
-    @ToString.Exclude
     private Set<Ticket> tickets = new HashSet<>();
 
     @Override

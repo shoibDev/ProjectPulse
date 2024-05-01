@@ -3,21 +3,20 @@ package com.wahab.backend.service;
 import com.wahab.backend.dto.TicketDTO;
 import com.wahab.backend.entity.Ticket;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface TicketService {
 
-    TicketDTO createTicket(TicketDTO ticketDTO);
+    TicketDTO createTicket(Principal principal, Long projectId, TicketDTO ticketDTO);
 
     Ticket findTicketById(Long ticketId);
 
-    List<TicketDTO> retrieveAllTickets();
+    List<TicketDTO> getAllTickets(Principal principal);
 
-    Ticket updateTicket(Ticket ticket);
+    TicketDTO updateTicket(Long ticketId, TicketDTO ticketDTO);
 
-    void deleteTicketById(Integer ticketId);
-
-    TicketDTO requestBodyTicketToEntity(Long ticketId, Ticket ticket);
+    void deleteTicketById(Long ticketId);
 
 
 }
