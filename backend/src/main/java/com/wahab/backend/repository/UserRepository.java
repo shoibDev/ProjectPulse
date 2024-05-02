@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByEmailNot(String email);
 
-    @Query("SELECT u FROM User u WHERE u.id NOT IN (SELECT p.users FROM Project p WHERE p.id = :projectId)")
-    List<User> findAllByProjectIdNot(Long projectId);
+//    @Query("SELECT u FROM User u WHERE u.id NOT IN (SELECT p.users FROM Project p WHERE p.id = :projectId)")
+//    List<User> findAllByProjectIdNot(Long projectId);
 }

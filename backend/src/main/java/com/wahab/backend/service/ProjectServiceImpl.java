@@ -39,11 +39,14 @@ public class ProjectServiceImpl implements ProjectService {
      * @return the created project as a DTO
      */
     @Override
-    public ProjectDTO createProject(ProjectDTO projectDTO) {
+    public ProjectDTO createProject(Principal principal, ProjectDTO projectDTO) {
         Project project = Project.builder()
                 .title(projectDTO.title())
                 .build();
 
+        Long principalId = userService.getPrincipalUser(principal).id();
+        projectDTO.userIds().add(principalId);
+        
         Set<User> setInitialUsers = new HashSet<>(userRepository.findAllById(projectDTO.userIds()));
 
         project.setUsers(setInitialUsers);

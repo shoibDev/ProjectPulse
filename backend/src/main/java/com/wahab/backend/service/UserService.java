@@ -22,6 +22,6 @@ public interface UserService{
 
     User DTOToEntity(Long userId, User user);
 
-    List<UserDTO> getUsersExcludingProject(Long projectId);
+    //List<UserDTO> getUsersExcludingProject(Long projectId);
 
 }

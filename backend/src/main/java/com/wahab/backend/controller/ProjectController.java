@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "api/v1/project")
@@ -29,8 +30,8 @@ public class ProjectController {
     private final UserMapper userMapper;
 
     @PostMapping("/create-project")
-    public ProjectDTO createProject(@RequestBody ProjectDTO projectDTO){
-        return projectService.createProject(projectDTO);
+    public ProjectDTO createProject(Principal principal, @RequestBody ProjectDTO projectDTO){
+        return projectService.createProject(principal, projectDTO);
     }
 
 
@@ -45,10 +46,10 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/exclude-users")
-    public List<UserDTO> getUsersExcludingProject(@RequestParam Long projectId) {
-        return userService.getUsersExcludingProject(projectId);
-    }
+//    @GetMapping("/exclude-users")
+//    public List<UserDTO> getUsersExcludingProject(@RequestParam Long projectId) {
+//        return userService.getUsersExcludingProject(projectId);
+//    }
 
 
     @DeleteMapping("/{projectId}/delete")

@@ -1,37 +1,29 @@
 import * as React from 'react';
-import { mockAuthService, User } from '../services/mockAuthService';
+import { authService } from '../services/AuthService';
 
-// Define the type for the context value
-interface AuthContextType {
-  user: User | null;
-  login: () => Promise<void>;
-  logout: () => void;
-}
-
-// Create the context with a default value
-const AuthContext = React.createContext<AuthContextType>({
-  user: null,
-  login: async () => {},
+// Adjust the default context to match the function's return type
+const AuthContext = React.createContext({
+  isAuthenticated: false,
+  login: async (_email: string, _password: string): Promise<boolean> => { return false; },
   logout: () => {},
 });
 
-// Define the props type for AuthProvider
-interface AuthProviderProps {
-  children: React.ReactNode; // Use React.ReactNode for children
-}
+export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = React.useState<User | null>(null);
-
-  const login = async () => {
-    const user = await mockAuthService.login();
-    setUser(user);
+  const login = async (email: string, password: string): Promise<boolean> => {
+      const result = await authService.login(email, password);
+      setIsAuthenticated(result);
+      return result;
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    authService.logout();
+    setIsAuthenticated(false);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

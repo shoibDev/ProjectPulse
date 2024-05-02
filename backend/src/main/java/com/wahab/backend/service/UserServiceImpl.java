@@ -115,11 +115,11 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    @Override
-    public List<UserDTO> getUsersExcludingProject(Long projectId) {
-        List<User> users = userRepository.findAllByProjectIdNot(projectId);
-        return users.stream()
-                .map(userMapper)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<UserDTO> getUsersExcludingProject(Long projectId) {
+//        List<User> users = userRepository.findAllByProjectIdNot(projectId);
+//        return users.stream()
+//                .map(userMapper)
+//                .collect(Collectors.toList());
+//    }
 }

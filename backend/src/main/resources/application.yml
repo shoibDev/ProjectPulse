@@ -1,11 +1,11 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: password
+    url: jdbc:postgresql://localhost:5432/BugTrackerDb
+    username: postgres
+    password: Flower1973!@
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
     hibernate:
       ddl-auto: create-drop
-    show-sql: false  # Changed from false to true to enable SQL logging
+    show-sql: true  # Changed from false to true to enable SQL logging

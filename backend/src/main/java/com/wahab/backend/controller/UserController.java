@@ -14,6 +14,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "api/v1/user")
@@ -45,11 +46,11 @@ public class UserController {
     }
 
     @GetMapping("/exclude-current")
-    public List<UserDTO> findAllUsersExceptCurrent() {
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmailNot(currentUserEmail)
+    public List<UserDTO> findAllUsersExceptCurrent(Principal principal) {
+        String currentUserEmail = principal.getName();
+        return userService.getAllUsers()
                 .stream()
-                .map(userMapper)
+                .filter(userDTO -> !userDTO.email().equals(currentUserEmail))
                 .collect(Collectors.toList());
     }
 

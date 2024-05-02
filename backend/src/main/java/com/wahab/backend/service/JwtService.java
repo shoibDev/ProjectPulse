@@ -33,7 +33,7 @@ public class JwtService {
      * This approach enhances security by not hard-coding sensitive information directly in the source code.
      */
 
-    private final String SECRET_KEY = "uslnzbDMvcK9yr6Dms5VR6Iqv2OGgyKa";
+    private final String SECRET_KEY = "566B597033733676397924423F4528482B4D6251655468576D5A713474377721";
 
     /**
      * Extracts the username from the JWT.

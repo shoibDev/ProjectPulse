@@ -23,8 +23,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      //await login(formData.email, formData.password);
-      await login();
+      await login(formData.email, formData.password); // Passing email and password
       navigate(from, { replace: true });
     } catch (error) {
       console.error('Failed to login:', error);

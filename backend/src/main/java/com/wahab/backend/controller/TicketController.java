@@ -12,6 +12,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "api/v1/ticket")

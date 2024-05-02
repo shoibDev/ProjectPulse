@@ -3,7 +3,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  useLocation,
   useNavigate,
 } from 'react-router-dom';
 import { useAuth } from '../auth/provider/auth';
@@ -15,20 +14,20 @@ import {
 
 import LoginPage from '../pages/LoginPage';
 
-const HomePage = () => <div>Home</div>;
-const SettingsPage = () => <div>Settings</div>;
+import DashboardPage from '../pages/DashboardPage';
+import AdminPage from '../pages/AdminPage';
 
 
 const LogoutPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
   React.useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       logout();
       navigate('/login', { replace: true });  // Redirect to login after logout
     }
-  }, [user, logout, navigate]);
+  }, []);
 
   return null;
 };
@@ -38,8 +37,8 @@ const routes = createRoutesFromElements(
 
     {/* Protect route based on authentication */}
     <Route element={<AuthenticationGuard />}>
-      <Route index element={<HomePage />} />
-      <Route path="settings" element={<SettingsPage />} />
+      <Route index element={<DashboardPage />} />
+      <Route path="settings" element={<AdminPage />} />
       <Route path="logout" element={<LogoutPage />} />
     </Route>
 

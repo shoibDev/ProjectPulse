@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProjectService {
 
-    ProjectDTO createProject(@RequestBody ProjectDTO project);
+    ProjectDTO createProject(Principal principal, @RequestBody ProjectDTO project);
 
     List<ProjectDTO> getUserProjects(Principal principal);
 
