@@ -15,10 +15,13 @@ public class ProjectMapper implements Function<Project, ProjectDTO> {
     @Override
     public ProjectDTO apply(Project project) {
 
-        List<Long> userIds = project.getUsers()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
+        List<Long> userIds = new ArrayList<>();
+        if (project.getUsers() != null) {
+            userIds = project.getUsers()
+                    .stream()
+                    .map(User::getId)
+                    .collect(Collectors.toList());
+        }
 
         List<Long> ticketIds = new ArrayList<>();
         if (project.getTickets() != null) {
@@ -31,6 +34,7 @@ public class ProjectMapper implements Function<Project, ProjectDTO> {
         return new ProjectDTO(
                 project.getId(),
                 project.getTitle(),
+                project.getDescription(),
                 project.getDateCreated(),
                 project.getLastUpdated(),
                 userIds,

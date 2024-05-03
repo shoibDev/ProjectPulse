@@ -42,6 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDTO createProject(Principal principal, ProjectDTO projectDTO) {
         Project project = Project.builder()
                 .title(projectDTO.title())
+                .description(projectDTO.description())
                 .build();
 
         Long principalId = userService.getPrincipalUser(principal).id();
@@ -98,6 +99,7 @@ public class ProjectServiceImpl implements ProjectService {
         updateTickets(existingProject, new HashSet<>(ticketRepository.findAllById(projectDTO.ticketIds())));
 
         existingProject.setTitle(projectDTO.title());
+        existingProject.setDescription(projectDTO.description());
         existingProject.setLastUpdated(LocalDateTime.now());
 
         projectRepository.save(existingProject);
