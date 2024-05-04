@@ -19,6 +19,7 @@ import java.util.Objects;
 public class Ticket {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String creator;

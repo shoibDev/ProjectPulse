@@ -22,8 +22,10 @@ public class TicketController {
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
 
-    @PostMapping
-    public TicketDTO createTicket(Principal principal, @RequestParam Long projectId, @RequestBody TicketDTO ticketDTO) {
+    @PostMapping("/{projectId}")
+    public TicketDTO createTicket(Principal principal,
+                                  @PathVariable Long projectId,
+                                  @RequestBody TicketDTO ticketDTO) {
         return ticketService.createTicket(principal, projectId, ticketDTO);
     }
 

@@ -16,6 +16,7 @@ import LoginPage from '../pages/LoginPage';
 
 import DashboardPage from '../pages/DashboardPage';
 import AdminPage from '../pages/AdminPage';
+import TicketsPage from '../pages/TicketsPage';
 
 
 const LogoutPage = () => {
@@ -38,7 +39,8 @@ const routes = createRoutesFromElements(
     {/* Protect route based on authentication */}
     <Route element={<AuthenticationGuard />}>
       <Route index element={<DashboardPage />} />
-      <Route path="settings" element={<AdminPage />} />
+      <Route path="tickets" element={<TicketsPage />} />
+      <Route path="administration" element={<AdminPage />} />
       <Route path="logout" element={<LogoutPage />} />
     </Route>
 

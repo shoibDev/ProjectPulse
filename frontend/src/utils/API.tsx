@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Project } from '../utils/types'
+import { Project, Ticket } from '../utils/types'
 
 Axios.defaults.baseURL = "http://localhost:8080/api/v1";
 Axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -31,6 +31,16 @@ class API{
     });
     return response.data;
   }
+
+  async getTickets(): Promise<Ticket[]> {
+    const reponse = await Axios.get(`ticket`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    return reponse.data;
+  }
+
 }
 
 const api = new API();

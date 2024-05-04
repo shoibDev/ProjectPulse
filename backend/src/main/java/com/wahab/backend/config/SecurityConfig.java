@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 // Configure authorization of requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/v1/auth/**", "api/v1/user/**", "api/v1/project/**").permitAll() // Permit all requests to certain matchers (e.g., public endpoints)
+                        .requestMatchers("api/v1/auth/**", "api/v1/user/**", "api/v1/project/**", "api/v1/ticket/**").permitAll() // Permit all requests to certain matchers (e.g., public endpoints)
                         .anyRequest().authenticated() // Require authentication for all others requests
                 )
                 // Configure session management to be stateless
