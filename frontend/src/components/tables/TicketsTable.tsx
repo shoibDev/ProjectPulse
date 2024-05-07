@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import api from '../../utils/API'
 import { Ticket } from '../../utils/types'
 import PaginationComponent from "./PaginationComponent";
 import { Link } from 'react-router-dom';
-import { Card, CardBody, CardHeader, Table } from 'reactstrap';
+import { Card, CardBody, CardFooter, CardHeader, Table } from 'reactstrap';
 
 
 const TicketsTable = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [ticketsPerPage] = useState(15);
+  const [userTickets, setUserTickets] = useState<Ticket[]>([]);
+  const [totalTickets, setTotalTickets] = useState(0);
+  const [currentTicketsPage, setCurrentTicketsPage] = useState(1);
+  const ticketsPerPage = 10;
 
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const TicketsTable = () => {
       try {
         const response = await api.getTickets();
         console.log(response)
-        setTickets(response);
+        setUserTickets(response);
       } catch (error) {
         console.error('Error fetching tickets:', error);
       }
@@ -26,12 +27,17 @@ const TicketsTable = () => {
     fetchTickets();
   }, []);
 
-  // Pagination
-  const indexOfLastTicket = currentPage * ticketsPerPage;
-  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
-  const currentTickets = tickets.slice(indexOfFirstTicket, indexOfLastTicket);
+  const ticketsData = useMemo(() => {
+    const computedTickets = userTickets;
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    setTotalTickets(computedTickets.length);
+
+    return computedTickets.slice(
+      (currentTicketsPage - 1) * ticketsPerPage,
+      (currentTicketsPage - 1) * ticketsPerPage + ticketsPerPage
+    );
+  }, [userTickets, currentTicketsPage]);
+
 
   return (
     <div className="p-3 mb-2 bg-light text-dark z-20 -mt-12 w-full">
@@ -50,7 +56,7 @@ const TicketsTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentTickets.map((ticket) => (
+              {ticketsData.map((ticket) => (
                 <tr key={ticket.id}>
                   <td>
                     <Link to={`/protected/home/projectview/${ticket.projectId}`}>
@@ -64,13 +70,14 @@ const TicketsTable = () => {
               ))}
             </tbody>
           </Table>
-          <ul className="pagination">
-        {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }).map((_, index) => (
-          <li key={index}>
-            <button onClick={() => paginate(index + 1)}>{index + 1}</button>
-          </li>
-        ))}
-      </ul>
+          <CardFooter className="py-4">
+                <PaginationComponent
+                  total={totalTickets}
+                  itemsPerPage={ticketsPerPage}
+                  currentPage={currentTicketsPage}
+                  onPageChange={(page) => setCurrentTicketsPage(page)}
+                />
+              </CardFooter>
         </CardBody>
       </Card>
     </div>

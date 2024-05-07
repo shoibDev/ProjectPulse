@@ -17,7 +17,7 @@ import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import AdminPage from '../pages/AdminPage';
 import TicketsPage from '../pages/TicketsPage';
-
+import ProjectTicketPage from '../pages/ProjectTicketPage';
 
 const LogoutPage = () => {
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const routes = createRoutesFromElements(
       <Route index element={<DashboardPage />} />
       <Route path="tickets" element={<TicketsPage />} />
       <Route path="administration" element={<AdminPage />} />
+      <Route path="project/:id" element={<ProjectTicketPage />} />
       <Route path="logout" element={<LogoutPage />} />
     </Route>
 

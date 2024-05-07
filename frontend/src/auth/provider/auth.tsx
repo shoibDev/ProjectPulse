@@ -11,6 +11,16 @@ const AuthContext = React.createContext({
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
 
+  React.useEffect(() => {
+    // Check token on component mount
+    const checkToken = async () => {
+      const isValid = await authService.validateToken();
+      setIsAuthenticated(isValid);
+    };
+    checkToken();
+    console.log(isAuthenticated);
+  }, []);
+
   const login = async (email: string, password: string): Promise<boolean> => {
       const result = await authService.login(email, password);
       setIsAuthenticated(result);

@@ -29,6 +29,11 @@ public class UserController {
         return userService.getPrincipalUser(principal);
     }
 
+    @GetMapping("{userId}")
+    public UserDTO getUserById(@PathVariable("userId") Long userId){
+        return userService.getUserById(userId);
+    }
+
     @GetMapping("/get-all-users")
     public List<UserDTO> getAllUsers(){
         return userService.getAllUsers();

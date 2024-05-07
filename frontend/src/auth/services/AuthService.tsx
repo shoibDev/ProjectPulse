@@ -32,6 +32,34 @@ class AuthService {
   getIsAuthenticated() {
     return this.isAuthenticated;
   }
+
+
+  async validateToken(): Promise<boolean> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return false;
+    }
+
+    return axios.get<{ isValid: boolean}>(`${BASE_URL}/auth/validateToken`, {
+      params: {
+        token: localStorage.getItem("token")
+      }
+    })
+    .then(response => {
+      let isValid: boolean = response.data;
+      console.log(response)
+  
+      this.isAuthenticated = !isValid;
+      return !isValid;
+    })
+    .catch(error => {
+      console.error('Token validation error:', error);
+      this.isAuthenticated = false;
+      return false;
+    });
+  }
 }
+
 
 export const authService = new AuthService();

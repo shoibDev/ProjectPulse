@@ -3,6 +3,7 @@ package com.wahab.backend.controller;
 import com.wahab.backend.auth.AuthenticationRequest;
 import com.wahab.backend.auth.RegisterRequest;
 import com.wahab.backend.service.AuthenticationService;
+import com.wahab.backend.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import com.wahab.backend.auth.AuthenticationResponse;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class Authentication {
 
     private final AuthenticationService service;
+    private final JwtService jwtService;
 
 
     /**
@@ -47,5 +49,17 @@ public class Authentication {
             @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+
+    /**
+     * Endpoint for validating a JWT token. Checks if the provided token is expired.
+     *
+     * @param token the JWT token to validate
+     * @return a response entity containing the token validation result
+     */
+    @GetMapping("/validateToken")
+    public boolean validateToken(@RequestParam String token) {
+        return jwtService.isTokenExpired(token);
     }
 }
