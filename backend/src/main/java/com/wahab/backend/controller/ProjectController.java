@@ -57,6 +57,13 @@ public class ProjectController {
         projectService.deleteProjectById(projectId);
     }
 
+    @PutMapping("/{projectId}/user/{userId}")
+    public void addTeamMember(@PathVariable("projectId") Long projectId,
+                              @PathVariable("userId") Long userId
+    ) {
+        projectService.addUserToProject(projectId, userId);
+    }
+
 
     @GetMapping("/{projectId}/users")
     public List<UserDTO> getProjectDevs(@PathVariable("projectId") Long projectId) {

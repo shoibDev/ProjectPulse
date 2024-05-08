@@ -18,7 +18,32 @@ class API{
       return response.data;
     }
 
+
+    async getAllUsersExceptCurrent(): Promise<User[]>{
+      const response = await Axios.get(`user/exclude-current`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    return response.data;
+  }
+
   // Project APIs
+
+
+  async createProject(project: Project): Promise<Project> {
+    const response = await Axios.post<Project>("project/create-project", {
+      title: project.title,
+      description: project.description
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    return response.data;
+  }
+  
+  
 
      // Method to fetch projects with typed response
      async getProjects(): Promise<Project[]> {
@@ -49,6 +74,23 @@ class API{
     const promises = userIds.map(userId => this.getUserById(userId));
     const users = await Promise.all(promises);
     return users;
+  }
+
+  async addTeamMember(projectId : number, userId : number){
+    console.log(projectId, userId)
+    await Axios.put(`project/${projectId}/user/${userId}`, {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+  }
+
+  async deleteProject(projectId: number){
+    await Axios.delete(`project/${projectId}/delete`, {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
   }
 
   async getTickets(): Promise<Ticket[]> {

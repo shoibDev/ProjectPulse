@@ -44,7 +44,6 @@ const ProjectsTable = () => {
   const [render, setRender] = useState(false);
   const toggleRender = () => setRender(!render);
 
-
   //pagination
   const [totalProjects, setTotalProjects] = useState(0);
   const [currentProjectPage, setCurrentProjectPage] = useState(1);
@@ -82,6 +81,20 @@ const ProjectsTable = () => {
   }, [selectedProjectId]);
 
 
+  const deleteProject = async (projectId) => {
+    try {
+      await api.deleteProject(projectId);
+      await api.getProjects().then((json) => {
+        setProjects(json);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log("Project deleted");
+  };
+
+
   const projectData = useMemo(() => {
     const computedProjects = projects;
 
@@ -95,7 +108,7 @@ const ProjectsTable = () => {
 
 
   return (
-    <div className="p-3 mb-2 bg-light text-dark z-20 -mt-12 w-full">
+    <div className="p-3 mb-2 text-dark z-20 -mt-12 w-full bg-white">
       <Card className="shadow p-3 mb-5 rounded bg-white">
         <CardHeader className="border-0 d-flex justify-content-between align-items-center">
           <h3 className="mb-2">Projects</h3>
@@ -105,7 +118,7 @@ const ProjectsTable = () => {
         </CardHeader>
         <CardBody>
           <Table>
-            <thead className="thead-light">
+            <thead className="border-0 rounded">
               <tr>
                 <th scope="col">PROJECT</th>
                 <th scope="col">DESCRIPTION</th>

@@ -17,6 +17,8 @@ public interface ProjectService {
 
     ProjectDTO updateProject(ProjectDTO projectDTO);
 
+    void addUserToProject(Long projectId, Long userId);
+
     void deleteProjectById(Long projectId);
 
 }

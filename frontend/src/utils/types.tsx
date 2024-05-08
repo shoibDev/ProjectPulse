@@ -9,13 +9,14 @@ export interface User{
 }
 
 export interface Project {
-  id: number;
+  id?: number;
   title: string;
   description: string;
-  dateCreated: string;
-  lastUpdated: string;
-  userIds: number[];
-  ticketIds: number[];
+  dateCreated?: string;
+  lastUpdated?: string;
+  userIds?: number[];
+  team?: User[]
+  ticketIds?: number[];
 }
 
 export interface Ticket{

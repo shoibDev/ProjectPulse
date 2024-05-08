@@ -45,16 +45,11 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(projectDTO.description())
                 .build();
 
-        Long principalId = userService.getPrincipalUser(principal).id();
-        projectDTO.userIds().add(principalId);
-        
-        Set<User> setInitialUsers = new HashSet<>(userRepository.findAllById(projectDTO.userIds()));
-
-        project.setUsers(setInitialUsers);
-        setInitialUsers.forEach(user -> user.getProjects().add(project));
+        User principalUser = userService.findUserById(userService.getPrincipalUser(principal).id());
+        principalUser.getProjects().add(project);
 
         projectRepository.save(project);
-        userRepository.saveAll(setInitialUsers);
+        userRepository.save(principalUser);
 
         return projectMapper.apply(project);
     }
@@ -104,6 +99,18 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.save(existingProject);
         return projectMapper.apply(existingProject);
+    }
+
+    @Override
+    public void addUserToProject(Long projectId, Long userId) {
+        Project project = projectRepository.getReferenceById(projectId);
+        User user = userRepository.findById(userId).orElseThrow();
+
+        project.getUsers().add(user);
+        user.getProjects().add(project);
+
+        projectRepository.save(project);
+        userRepository.save(user);
     }
 
     /**
