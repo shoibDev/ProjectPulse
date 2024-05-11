@@ -15,9 +15,13 @@ public interface ProjectService {
 
     ProjectDTO findProjectById(Long projectId);
 
-    ProjectDTO updateProject(ProjectDTO projectDTO);
+    ProjectDTO updateProject(Long projectId,ProjectDTO projectDTO);
 
     void addUserToProject(Long projectId, Long userId);
+
+    void removeTeamMember(Long projectId, Long userId);
+
+    void removeAllUsers(Long projectId);
 
     void deleteProjectById(Long projectId);
 

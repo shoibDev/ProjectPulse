@@ -1,6 +1,7 @@
 
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../auth/provider/auth';
+import React from "react";
 
 export const Layout: React.FC = () => {
   const { isAuthenticated } = useAuth();

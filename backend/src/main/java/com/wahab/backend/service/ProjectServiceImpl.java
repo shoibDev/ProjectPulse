@@ -86,12 +86,9 @@ public class ProjectServiceImpl implements ProjectService {
      * @return the updated project as a DTO
      */
     @Override
-    public ProjectDTO updateProject(ProjectDTO projectDTO) {
-        Project existingProject = projectRepository.findById(projectDTO.id())
+    public ProjectDTO updateProject(Long projectId, ProjectDTO projectDTO) {
+        Project existingProject = projectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Project with ID " + projectDTO.id() + " not found"));
-
-        updateUsers(existingProject, new HashSet<>(userRepository.findAllById(projectDTO.userIds())));
-        updateTickets(existingProject, new HashSet<>(ticketRepository.findAllById(projectDTO.ticketIds())));
 
         existingProject.setTitle(projectDTO.title());
         existingProject.setDescription(projectDTO.description());
@@ -113,6 +110,38 @@ public class ProjectServiceImpl implements ProjectService {
         userRepository.save(user);
     }
 
+    @Override
+    public void removeTeamMember(Long projectId, Long userId) {
+        Project project = projectRepository.getReferenceById(projectId);
+        User user = userRepository.findById(userId).orElseThrow();
+
+        project.getUsers().remove(user);
+        user.getProjects().remove(project);
+
+        projectRepository.save(project);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void removeAllUsers(Long projectId) {
+        // Fetch the project with all associated users
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project with ID " + projectId + " not found"));
+
+        // Iterate over the users and remove the project from each user's project set
+        Set<User> users = project.getUsers();
+        users.forEach(user -> user.getProjects().remove(project));
+
+        // Clear the project's user set
+        project.getUsers().clear();
+
+        // Save changes in the database
+        userRepository.saveAll(users); // Saves all users with the updated project list
+        projectRepository.save(project); // Save the project with the updated user list
+    }
+
+
+
     /**
      * Deletes a project by its ID.
      * @param projectId the ID of the project to delete
@@ -127,32 +156,4 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.delete(project);
     }
 
-    private void updateUsers(Project project, Set<User> newUsers) {
-        Set<User> currentUsers = project.getUsers();
-        Set<User> usersToAdd = newUsers.stream().filter(user -> !currentUsers.contains(user)).collect(Collectors.toSet());
-        Set<User> usersToRemove = currentUsers.stream().filter(user -> !newUsers.contains(user)).collect(Collectors.toSet());
-
-        usersToAdd.forEach(user -> {
-            user.getProjects().add(project);
-            project.getUsers().add(user);
-        });
-
-        usersToRemove.forEach(user -> {
-            user.getProjects().remove(project);
-            project.getUsers().remove(user);
-        });
-
-        userRepository.saveAll(usersToAdd);
-        userRepository.saveAll(usersToRemove);
-    }
-
-    private void updateTickets(Project project, Set<Ticket> newTickets) {
-        Set<Ticket> currentTickets = project.getTickets();
-        Set<Ticket> ticketsToAdd = newTickets.stream().filter(ticket -> !currentTickets.contains(ticket)).collect(Collectors.toSet());
-        Set<Ticket> ticketsToRemove = currentTickets.stream().filter(ticket -> !newTickets.contains(ticket)).collect(Collectors.toSet());
-
-        project.setTickets(newTickets);
-        ticketRepository.saveAll(ticketsToAdd);
-        ticketRepository.deleteAll(ticketsToRemove);
-    }
 }

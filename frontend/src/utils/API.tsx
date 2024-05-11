@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Project, Ticket, User } from '../utils/types'
+import {Project, Ticket, User} from '../utils/types'
 
 Axios.defaults.baseURL = "http://localhost:8080/api/v1";
 Axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -60,6 +60,18 @@ class API{
       }
   }
 
+  // Method to update a project
+async updateProject(projectId: number, project: any): Promise<Project> {
+  const response = await Axios.put(`project/${projectId}/update-project`, project, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  return response.data;
+}
+
+
   async getProjectById(projectId: number): Promise<Project>{
     const response = await Axios.get(`project/${projectId}`, {
       headers: {
@@ -72,12 +84,10 @@ class API{
 
   async getProjectUsers(userIds: number[]): Promise<User[]> {
     const promises = userIds.map(userId => this.getUserById(userId));
-    const users = await Promise.all(promises);
-    return users;
+    return await Promise.all(promises);
   }
 
-  async addTeamMember(projectId : number, userId : number){
-    console.log(projectId, userId)
+  async addTeamMember(projectId: number | undefined, userId: number){
     await Axios.put(`project/${projectId}/user/${userId}`, {
       headers:{
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -85,7 +95,23 @@ class API{
     })
   }
 
-  async deleteProject(projectId: number){
+  async removeTeamMember(projectId: number, userId: number){
+    await Axios.delete(`project/${projectId}/user/${userId}`, {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+  }
+
+  async removeAllTeamMembers(projectId: number){
+    await Axios.delete(`project/${projectId}/users`, {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+  }
+
+  async deleteProject(projectId: number | undefined){
     await Axios.delete(`project/${projectId}/delete`, {
       headers:{
         Authorization: `Bearer ${localStorage.getItem("token")}`,

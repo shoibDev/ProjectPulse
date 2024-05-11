@@ -34,6 +34,11 @@ public class ProjectController {
         return projectService.createProject(principal, projectDTO);
     }
 
+    @PutMapping("/{projectId}/update-project")
+    public ProjectDTO updateProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectDTO projectDTO){
+        return projectService.updateProject(projectId, projectDTO);
+    }
+
 
     @GetMapping("/assigned-projects")
     public List<ProjectDTO> getAssignedProjects(Principal principal){
@@ -44,6 +49,7 @@ public class ProjectController {
     public ProjectDTO getProjectById(@PathVariable("projectId") Long projectId) {
         return projectService.findProjectById(projectId);
     }
+
 
 
 //    @GetMapping("/exclude-users")
@@ -62,6 +68,17 @@ public class ProjectController {
                               @PathVariable("userId") Long userId
     ) {
         projectService.addUserToProject(projectId, userId);
+    }
+
+    @DeleteMapping("/{projectId}/user/{userId}")
+    public void removeUser(@PathVariable("projectId") Long projectId, @PathVariable("userId") Long userId){
+        projectService.removeTeamMember(projectId, userId);
+    }
+
+
+    @DeleteMapping("/{projectId}/users")
+    public void removeAllTeamMembers(@PathVariable("projectId") Long projectId){
+        projectService.removeAllUsers(projectId);
     }
 
 
