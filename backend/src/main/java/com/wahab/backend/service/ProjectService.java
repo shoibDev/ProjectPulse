@@ -1,6 +1,7 @@
 package com.wahab.backend.service;
 
 import com.wahab.backend.dto.ProjectDTO;
+import com.wahab.backend.dto.UserDTO;
 import com.wahab.backend.entity.Project;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -16,6 +17,8 @@ public interface ProjectService {
     ProjectDTO findProjectById(Long projectId);
 
     ProjectDTO updateProject(Long projectId,ProjectDTO projectDTO);
+
+    List<UserDTO> getNoneProjectUsers(Long projectId);
 
     void addUserToProject(Long projectId, Long userId);
 

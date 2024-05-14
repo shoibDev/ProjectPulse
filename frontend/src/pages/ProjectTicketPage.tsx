@@ -12,75 +12,42 @@ type RouteParams = {
 }
 
 const ProjectTicketPage = () => {
-  const { id } = useParams<RouteParams>();
-  const projectId = parseInt(id, 10);
+  const { id } = useParams<RouteParams>(); // id params is a string
+  const projectId: number = parseInt(id as string, 10); // Parse the string to a number as parseInt expects a string
 
   const [projectData, setProjectData] = useState<Project>();
-  const [projectTeam, setProjectTeam] = useState<User[]>([]);  // Define type for projectTeam
-  const [projectTickets, setProjectTickets] = useState<Ticket[]>([]);
-
-  const [selectedTicketId, setSelectedTicketId] = useState("");
-  const [selectedTicket, setSelectedTicket] = useState({});
+  const [projectTeam, setProjectTeam] = useState<User[]>([]); // Initialize as an empty array
+  const [projectTickets, setProjectTickets] = useState<Ticket[]>([]); // Initialize as an empty array
 
   const [isNewMemberOpen, setIsNewMemberOpen] = useState(false);
-  const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
-  const [isEditTicketOpen, setIsEditTicketOpen] = useState(false);
 
 
   const toggleNewMember = () => setIsNewMemberOpen(!isNewMemberOpen);
-  const toggleCreateTicket = () => setIsNewTicketOpen(!isNewTicketOpen);
-  const toggleEditTicket = () => setIsEditTicketOpen(!isEditTicketOpen);
 
   useEffect(() => {
-    const abortController = new AbortController();
-
     async function fetchData() {
       if (!isNaN(projectId)) {  // Check if projectId is a valid number
-        try {
           const projectDataRes = await api.getProjectById(projectId);
           setProjectData(projectDataRes);
-        } catch (err) {
-          if (!abortController.signal.aborted) {
-            console.log(`Error requesting project data: ${err}`);
-          }
-        }
       }
     }
-
-    fetchData();
-    return () => {
-      abortController.abort();
-    };
+    fetchData().then(() => console.log("Project Data fetched"));
   }, [projectId]);
 
   useEffect(() => {
-    const abortController = new AbortController();
-
     async function fetchTeam() {
       if (projectData && projectData.userIds) {  // Ensure projectData and projectData.userIds are available
-        try {
           const projectTeamRes = await api.getProjectUsers(projectData.userIds);
           setProjectTeam(projectTeamRes);
 
-          const projectTicketsRes = await api.getProjectTickets(
-            projectData.ticketIds,
-            
-          );
+          const projectTicketsRes = await api.getProjectTickets(projectData.ticketIds || []);
           setProjectTickets(projectTicketsRes);
-        } catch (err) {
-          if (!abortController.signal.aborted) {
-            console.log("Error fetching project team data", err);
-          }
-        }
       }
     }
 
-    fetchTeam();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [projectId, isNewMemberOpen]);
+    fetchTeam().then(() => console.log("Project Team fetched"));
+    
+  }, [projectId, isNewMemberOpen, projectData]);
 
   return (
     <div>
@@ -101,14 +68,6 @@ const ProjectTicketPage = () => {
                 projectId={projectId}
                 projectTickets={projectTickets}
                 setProjectTickets={setProjectTickets}
-                //projectTeam={projectTeam}
-                // selectedTicket={selectedTicket}
-                // setSelectedTicketId={setSelectedTicketId}
-                toggleEditTicket={toggleEditTicket}
-                toggleCreateTicket={toggleCreateTicket}
-                isEditTicketOpen={isEditTicketOpen}
-                isNewTicketOpen={isNewTicketOpen}
-                //assignedDevs={assignedDevs}
               />
             </Col>
     </div>

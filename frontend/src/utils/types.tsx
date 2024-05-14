@@ -20,13 +20,13 @@ export interface Project {
 }
 
 export interface Ticket{
-  id: number;
-  creator: string;
+  id?: number;
+  creator?: string;
   title: string;
   description: string;
   priority: string;
   type: string;
   status: string;
-  assignedUserId: number;
-  projectId: number;
+  assignedUserId?: number;
+  projectId?: number;
 }

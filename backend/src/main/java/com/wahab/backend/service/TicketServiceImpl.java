@@ -42,7 +42,7 @@ public class TicketServiceImpl implements TicketService{
 
 
         Ticket ticket = Ticket.builder()
-                .creator(ticketDTO.creator())
+                .creator(user.getFirstName() + " " + user.getLastName())
                 .title(ticketDTO.title())
                 .description(ticketDTO.description())
                 .priority(ticketDTO.priority())
@@ -87,10 +87,11 @@ public class TicketServiceImpl implements TicketService{
         ticket.setPriority(ticketDTO.priority());
         ticket.setType(ticketDTO.type());
         ticket.setStatus(ticketDTO.status());
+        ticket.setAssignedUser(null);
 
-        User assignedUser = userRepository.findById(ticketDTO.userId())
+  /*      User assignedUser = userRepository.findById(ticketDTO.userId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id " + ticketDTO.userId()));
-        ticket.setAssignedUser(assignedUser);
+        ticket.setAssignedUser(assignedUser);*/
 
         ticketRepository.save(ticket);
         return ticketMapper.apply(ticket);

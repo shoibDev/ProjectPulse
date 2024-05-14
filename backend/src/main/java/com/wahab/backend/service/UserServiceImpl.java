@@ -76,6 +76,11 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<User> retrieveAllUsers() {
+        return userRepository.findAll();
+    }
+
     /**
      * Saves or updates user information.
      *

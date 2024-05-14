@@ -52,10 +52,10 @@ public class ProjectController {
 
 
 
-//    @GetMapping("/exclude-users")
-//    public List<UserDTO> getUsersExcludingProject(@RequestParam Long projectId) {
-//        return userService.getUsersExcludingProject(projectId);
-//    }
+    @GetMapping("/{projectId}/add-team-member-form")
+    public List<UserDTO> getAvailableUsers(@PathVariable("projectId") Long projectId){
+        return projectService.getNoneProjectUsers(projectId);
+    }
 
 
     @DeleteMapping("/{projectId}/delete")

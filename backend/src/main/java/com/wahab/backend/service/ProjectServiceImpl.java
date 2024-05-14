@@ -2,6 +2,8 @@ package com.wahab.backend.service;
 
 import com.wahab.backend.dto.ProjectDTO;
 import com.wahab.backend.dto.ProjectMapper;
+import com.wahab.backend.dto.UserDTO;
+import com.wahab.backend.dto.UserMapper;
 import com.wahab.backend.entity.Project;
 import com.wahab.backend.entity.Ticket;
 import com.wahab.backend.entity.User;
@@ -32,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final TicketRepository ticketRepository;
     private final ProjectMapper projectMapper;
+    private final UserMapper userMapper;
 
     /**
      * Creates a new project based on the provided DTO and assigns users to it.
@@ -96,6 +99,14 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.save(existingProject);
         return projectMapper.apply(existingProject);
+    }
+
+    @Override
+    public List<UserDTO> getNoneProjectUsers(Long projectId) {
+        List<User> userDTO =  userService.retrieveAllUsers().stream().filter(user -> user.getProjects().stream().noneMatch(project -> project.getId().equals(projectId)))
+                .collect(Collectors.toList());
+
+        return userDTO.stream().map(userMapper).collect(Collectors.toList());
     }
 
     @Override

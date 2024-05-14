@@ -3,6 +3,8 @@ import React, { useMemo, useState } from 'react';
 import { User } from '../../utils/types'
 import { Button, Card, CardFooter, CardHeader, Col, DropdownItem, DropdownMenu, DropdownToggle, Media, Modal, ModalHeader, Row, Table, UncontrolledDropdown } from 'reactstrap';
 import PaginationComponent from './PaginationComponent';
+import api from "../../utils/API.tsx";
+import UpdateTeams from "../forms/UpdateTeams.tsx";
 
 // Define the types for the props
 interface ProjectTeamTableProps {
@@ -22,6 +24,7 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
   projectId
 }) => {
 
+  const [userId, setUserId] = useState<number>(0);
 
   const [totalTeamMembers, setTotalTeamMembers] = useState(0);
   const [currentTeamMembersPage, setCurrentTeamMembersPage] = useState(1);
@@ -29,7 +32,7 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
 
   //pagination for team table
   const teamMembersData = useMemo(() => {
-    let computedTeamMembers = projectTeam;
+    const computedTeamMembers = projectTeam;
 
     setTotalTeamMembers(computedTeamMembers.length);
 
@@ -57,11 +60,11 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
 
               <Modal isOpen={isNewMemberOpen} onClose={toggleNewMember}>
                 <ModalHeader toggle={toggleNewMember}>Add Member</ModalHeader>
-                {/* <AddTeamMember
-                  projectId={projectId}
-                  toggle={toggleNewMember}
-                  setProjectTeam={setProjectTeam}
-                /> */}
+                  <UpdateTeams
+                    projectId={projectId}
+                    toggle={toggleNewMember}
+                    setProjectTeam={setProjectTeam}
+                  />
               </Modal>
             </div>
           </Col>
@@ -88,25 +91,24 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
                 </th>
                 <td>{user.email}</td>
                 <td className="text-right">
-                  <UncontrolledDropdown>
+                  <UncontrolledDropdown direction="right">
                     <DropdownToggle
-                      className="btn-icon-only text-light"
-                      href="#pablo"
-                      role="button"
-                      size="sm"
-                      color=""
-                      onClick={(e) => e.preventDefault()}
+                        className="btn-icon-only text-light"
+                        href="#pablo"
+                        role="button"
+                        size="sm"
+                        onClick={() => setUserId(user.id)}
                     >
-                      <i className="fas fa-ellipsis-v" />
+                      ⋯
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-arrow" right>
-                      {/* <DropdownItem
-                        onClick={() =>
-                          removeTeamMember(projectId, user.user_id)
-                        }
+                      <DropdownItem
+                          onClick={() =>
+                              api.removeTeamMember(projectId, userId)
+                          }
                       >
                         Remove Team Member
-                      </DropdownItem> */}
+                      </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </td>

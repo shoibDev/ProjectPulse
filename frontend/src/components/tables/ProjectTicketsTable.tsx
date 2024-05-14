@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { Ticket, User} from "../../utils/types";
+import React, {useState, useMemo, useEffect} from "react";
+import { Ticket } from "../../utils/types";
 
 // reactstrap components
 import {
@@ -21,47 +21,51 @@ import {
 } from "reactstrap";
 
 import PaginationComponent from "./PaginationComponent";
-// import CreateTicket from "../Forms/CreateTicket";
-// import UpdateTicket from "../Forms/UpdateTicket";
-import API from "../../utils/API"
+
+import api from "../../utils/API.tsx";
+import CreateTicket from "../forms/CreateTicket.tsx";
+import UpdateTicket from "../forms/UpdateTicket.tsx";
 
 interface ProjectTicketsTableProps {
   projectId: number;
   projectTickets: Ticket[];
   setProjectTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
-  // projectTeam: User[];
-  // selectedTicket: Ticket | null;
-  // setSelectedTicketId: (ticketId: number | null) => void;
-  toggleEditTicket: () => void;
-  toggleCreateTicket: () => void;
-  isEditTicketOpen: boolean;
-  isNewTicketOpen: boolean;
-  // assignedDevs: Developer[]; // Uncomment and define Developer type if you use this
 }
 
 const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
   projectId,
   projectTickets,
   setProjectTickets,
-  //projectTeam,
-  // selectedTicket,
-  // setSelectedTicketId,
-  toggleEditTicket,
-  toggleCreateTicket,
-  isEditTicketOpen,
-  isNewTicketOpen,
-  // assignedDevs,
 }) => {
 
+  const [selectedTicketId, setSelectedTicketId] = useState<number>(0);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket>({} as Ticket);
 
-    //pagination
+  const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
+  const [isEditTicketOpen, setIsEditTicketOpen] = useState(false);
+
+  const toggleCreateTicket = () => setIsNewTicketOpen(!isNewTicketOpen);
+  const toggleEditTicket = () => setIsEditTicketOpen(!isEditTicketOpen);
+
+
+  useEffect(() => {
+    async function fetchTicket() {
+      if (selectedTicketId) {
+        const ticket = await api.getTicketById(selectedTicketId);
+        setSelectedTicket(ticket);
+      }
+    }
+    fetchTicket();
+  }, [selectedTicketId]);
+
+  //pagination
     const [totalTickets, setTotalTickets] = useState(0);
     const [currentTicketPage, setCurrentTicketPage] = useState(1);
     const ticketsPerPage = 6;
   
     //pagination for tickets table
     const ticketsData = useMemo(() => {
-      let computedTickets = projectTickets;
+      const computedTickets = projectTickets;
   
       setTotalTickets(computedTickets.length);
   
@@ -71,8 +75,10 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
         (currentTicketPage - 1) * ticketsPerPage + ticketsPerPage
       );
     }, [projectTickets, currentTicketPage]);
-  
-  // Component implementation will go here
+
+  const deleteTicket = (id: number | undefined) => {
+    api.deleteTicket(id);
+  };
   return (
     <Card className="shadow">
       <CardHeader>
@@ -91,11 +97,11 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
                   <ModalHeader toggle={toggleCreateTicket}>
                     Create Ticket
                   </ModalHeader>
-                  {/* <CreateTicket
-                    team={projectTeam}
+                  <CreateTicket
+                    projectId={projectId}
                     toggle={toggleCreateTicket}
                     setProjectTickets={setProjectTickets}
-                  /> */}
+                  />
                 </Container>
               </Modal>
             </div>
@@ -116,11 +122,10 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
             return (
               <tr
                 key={ticket.id}
-                id={ticket.id}
                 className="ticketRow"
-                // onClick={() => {
-                //   setSelectedTicketId(ticket.id);
-                // }}
+                onClick={() => {
+                  setSelectedTicketId(ticket.id);
+                }}
               >
                 <th>
                   <Media>{ticket.title}</Media>
@@ -155,13 +160,13 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
                         Edit Ticket
                       </DropdownItem>
 
-                      {/* <DropdownItem
+                       <DropdownItem
                         onClick={() => {
-                          deleteTicket(ticket.id);
+                          deleteTicket(selectedTicketId);
                         }}
                       >
                         Remove Ticket
-                      </DropdownItem> */}
+                      </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </td>
@@ -172,13 +177,11 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
           <Modal isOpen={isEditTicketOpen} toggle={toggleEditTicket}>
             <Container className="m-4 align-self-center" fluid>
               <ModalHeader toggle={toggleEditTicket}>Edit Ticket</ModalHeader>
-              {/* <UpdateTicket
-                team={projectTeam}
-                ticketData={selectedTicket}
+               <UpdateTicket
+                ticket={selectedTicket}
                 toggle={toggleEditTicket}
                 setProjectTickets={setProjectTickets}
-                assignedDevs={assignedDevs}
-              /> */}
+              />
             </Container>
           </Modal>
         </tbody>
