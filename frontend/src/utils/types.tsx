@@ -4,6 +4,7 @@ export interface User{
   lastName: string;
   email: string;
   phoneNumber: string;
+  role?: string;
   projectIds: number[];
   ticketIds: number[];
 }

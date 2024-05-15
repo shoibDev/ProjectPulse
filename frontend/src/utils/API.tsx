@@ -69,7 +69,7 @@ class API {
     }
 
     // Method to update a project
-    async updateProject(projectId: number, project: any): Promise<Project> {
+    async updateProject(projectId: number, project: never): Promise<Project> {
         const response = await Axios.put(`project/${projectId}/update-project`, project, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -183,6 +183,14 @@ class API {
                 }
             });
         }
+
+    async deleteUser(selectedUserId: number | undefined) {
+        await Axios.delete(`user/${selectedUserId}/delete`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+    }
 }
 
 const api = new API();
