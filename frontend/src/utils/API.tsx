@@ -1,10 +1,25 @@
 import Axios from "axios";
-import {Project, Ticket, User} from '../utils/types'
+import {Project, Ticket, User} from './types.tsx'
+import axios from "axios";
 
 Axios.defaults.baseURL = "http://localhost:8080/api/v1";
+Axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem("token")}`;
 Axios.defaults.headers.post["Content-Type"] = "application/json";
+const BASE_URL = 'http://localhost:8080/api/v1';
 
 class API {
+
+    async register(firstName: string, lastName: string, email: string, phoneNumber: string, password: string){
+        return axios.post(`${BASE_URL}/auth/register`, { firstName, lastName, email, phoneNumber, password })
+            .then(response => {
+                console.log(response);
+                return true;  // Return true on successful registration
+            })
+            .catch(error => {
+                console.error('Registration error:', error);
+                return false;  // Return false on registration failure
+            });
+    }
 
     // User APIs
 
@@ -28,13 +43,12 @@ class API {
         return response.data;
     }
 
-    async getPrincipal(): Promise<User> {
-        const response = await Axios.get(`user/load-Principal`, {
+    async editUser(userId: number, user: User): Promise<void> {
+        await Axios.put(`user/${userId}/edit-user`, user, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         })
-        return response.data;
     }
 
     // Project APIs
@@ -69,7 +83,7 @@ class API {
     }
 
     // Method to update a project
-    async updateProject(projectId: number, project: never): Promise<Project> {
+    async updateProject(projectId: number, project: { description: string; title: string }): Promise<Project> {
         const response = await Axios.put(`project/${projectId}/update-project`, project, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -95,7 +109,7 @@ class API {
         return await Promise.all(promises);
     }
 
-    async addTeamMember(projectId: number | undefined, userId: number[]) {
+    async addTeamMember(projectId: number | undefined, userId: number) {
         await Axios.put(`project/${projectId}/user/${userId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -177,12 +191,12 @@ class API {
     }
 
     async updateTicket(ticketId: number, ticket: Ticket): Promise<void> {
-          await Axios.put(`ticket/${ticketId}`, ticket, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-        }
+        await Axios.put(`ticket/${ticketId}`, ticket, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+    }
 
     async deleteUser(selectedUserId: number | undefined) {
         await Axios.delete(`user/${selectedUserId}/delete`, {
