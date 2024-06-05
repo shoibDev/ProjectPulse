@@ -23,7 +23,7 @@ const UserTable = () => {
             setUsers(users);
         };
 
-        fetchUsers();
+        fetchUsers().then(() => console.log("Users fetched"));
     }, []);
 
     useEffect(() => {

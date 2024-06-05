@@ -42,12 +42,12 @@ const TicketsTable = () => {
   return (
     <div className="p-3 mb-2 bg-light text-dark z-20 -mt-12 w-full">
       <Card className="shadow p-3 mb-5 rounded bg-white">
-        <CardHeader className="border-0 d-flex justify-content-between align-items-center">
-          <h3 className="mb-2">Tickets</h3>
+        <CardHeader className="border-0 d-flex justify-content-between align-items-center bg-white ">
+          <h6 className="mb-2">Tickets</h6>
         </CardHeader>
         <CardBody>
           <Table>
-            <thead>
+            <thead className="rounded border-t-2 border-b-2">
               <tr>
                 <th>Project Name</th>
                 <th>Ticket Name</th>
@@ -59,7 +59,7 @@ const TicketsTable = () => {
               {ticketsData.map((ticket) => (
                 <tr key={ticket.id}>
                   <td>
-                    <Link to={`/protected/home/projectview/${ticket.projectId}`}>
+                    <Link to={`/project/${ticket.projectId}`} style={{ textDecoration: 'none', color: '#D6A2E8' }}>
                       {ticket.projectId}
                     </Link>
                   </td>
@@ -70,7 +70,7 @@ const TicketsTable = () => {
               ))}
             </tbody>
           </Table>
-          <CardFooter className="py-4">
+          <CardFooter className="py-4 bg-white flex justify-center">
                 <PaginationComponent
                   total={totalTickets}
                   itemsPerPage={ticketsPerPage}

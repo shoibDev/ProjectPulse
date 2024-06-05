@@ -16,9 +16,10 @@ interface UpdateTicketProps {
     toggle: () => void;
     ticket: Ticket;
     SetProjectTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
+    render: () => void;
 }
 
-const UpdateTicket: React.FC<UpdateTicketProps> = ({ toggle, ticket, SetProjectTickets }) => {
+const UpdateTicket: React.FC<UpdateTicketProps> = ({ toggle, ticket, SetProjectTickets, render }) => {
     const [ticketValues, setTicketValues] = useState<Ticket>(ticket);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -43,6 +44,7 @@ const UpdateTicket: React.FC<UpdateTicketProps> = ({ toggle, ticket, SetProjectT
         } else {
             try {
                 await api.updateTicket(ticket.id, ticketValues);
+                render();
            /*     SetProjectTickets(prevTickets =>
                     prevTickets.map(t => t.id === ticketValues.id ? ticketValues : t)
                 );*/

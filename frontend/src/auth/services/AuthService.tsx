@@ -1,27 +1,46 @@
 import axios from 'axios';
+import Axios from "axios";
+
+Axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export type Authentication = {
   value : boolean;
 }
 const BASE_URL = 'http://localhost:8080/api/v1';
 
+class T {
+}
+
 class AuthService {
   isAuthenticated = false;
 
   async login(email: string, password: string): Promise<boolean> {
-    return axios.post<{ token: string }>(`${BASE_URL}/auth/authenticate`, { email, password })
-      .then(response => {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        this.isAuthenticated = true;
-        return true;  // Return true on successful login
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-        this.isAuthenticated = false;
-        return false;  // Return false on login failure
+    try {
+      const response = await fetch(`${BASE_URL}/auth/authenticate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const { token } = data;
+      console.log('Token received:', token); // Debugging line
+      localStorage.setItem('token', token);
+      this.isAuthenticated = true;
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      this.isAuthenticated = false;
+      return false;
+    }
   }
+
 
   logout(){
     localStorage.removeItem('token');
@@ -46,18 +65,18 @@ class AuthService {
         token: localStorage.getItem("token")
       }
     })
-    .then(response => {
-      let isValid: boolean = response.data;
-      console.log(response)
-  
-      this.isAuthenticated = !isValid;
-      return !isValid;
-    })
-    .catch(error => {
-      console.error('Token validation error:', error);
-      this.isAuthenticated = false;
-      return false;
-    });
+        .then(response => {
+          const isValid: T = response.data;
+          console.log(response)
+
+          this.isAuthenticated = !isValid;
+          return !isValid;
+        })
+        .catch(error => {
+          console.error('Token validation error:', error);
+          this.isAuthenticated = false;
+          return false;
+        });
   }
 }
 

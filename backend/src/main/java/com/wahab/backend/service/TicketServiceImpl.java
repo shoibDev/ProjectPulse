@@ -30,16 +30,13 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public TicketDTO createTicket(Principal principal, Long projectId, TicketDTO ticketDTO) {
-
-        User user = userService.findUserById(
-                        userRepository.findByEmail(
-                            principal.getName()
-                        ).orElseThrow(() -> new UsernameNotFoundException("User not found with email")
-                ).getId());
+        User user = userService.findUserById(userService.getPrincipalUser(principal).id());
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email " + principal.getName());
+        }
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found with id " + projectId));
-
 
         Ticket ticket = Ticket.builder()
                 .creator(user.getFirstName() + " " + user.getLastName())
@@ -52,11 +49,11 @@ public class TicketServiceImpl implements TicketService{
                 .assignedUser(user)
                 .build();
 
-        user.getTickets().add(ticket);
+        // Add the ticket to the project and user collections
         project.getTickets().add(ticket);
+        user.getTickets().add(ticket);
 
-        userRepository.save(user);
-        projectRepository.save(project);
+        // Save only the ticket, relying on cascading to handle the rest
         ticketRepository.save(ticket);
 
         return ticketMapper.apply(ticket);
@@ -87,7 +84,7 @@ public class TicketServiceImpl implements TicketService{
         ticket.setPriority(ticketDTO.priority());
         ticket.setType(ticketDTO.type());
         ticket.setStatus(ticketDTO.status());
-        ticket.setAssignedUser(null);
+        ticket.setAssignedUser(userRepository.getReferenceById(ticketDTO.userId()));
 
   /*      User assignedUser = userRepository.findById(ticketDTO.userId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id " + ticketDTO.userId()));

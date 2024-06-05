@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {Container, Row, FormGroup, Label, Form, Button, Input} from "reactstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Row, FormGroup, Label, Form, Button, Input } from "reactstrap";
+import { toast } from "react-toastify";
 
 import api from '../../utils/API';
-import {User, Project} from '../../utils/types';
+import { User, Project } from '../../utils/types';
 
 interface UpdateProjectProps {
     toggle: () => void;
@@ -11,7 +12,7 @@ interface UpdateProjectProps {
     projectId: number;
 }
 
-const UpdateProject: React.FC<UpdateProjectProps> = ({toggle, resetProjectId, projectData, projectId,}) => {
+const UpdateProject: React.FC<UpdateProjectProps> = ({ toggle, resetProjectId, projectData, projectId }) => {
     const [values, setValues] = useState({
         title: projectData.title,
         description: projectData.description,
@@ -21,13 +22,18 @@ const UpdateProject: React.FC<UpdateProjectProps> = ({toggle, resetProjectId, pr
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const allUsers = await api.getAllUsersExceptCurrent();
-            const projectUsers = await api.getProjectUsers(projectData.userIds || []);
-            setAllUsers(allUsers);
-            setSelectedUsers(projectUsers.map(user => user.id));
+            try {
+                const allUsers = await api.getAllUsersExceptCurrent();
+                const projectUsers = await api.getProjectUsers(projectData.userIds || []);
+                setAllUsers(allUsers);
+                setSelectedUsers(projectUsers.map(user => user.id));
+            } catch (error) {
+                console.error("Failed to fetch users:", error);
+                toast.error("Failed to fetch users");
+            }
         };
 
-        fetchUsers().then(() => console.log("Users fetched"));
+        fetchUsers();
     }, [projectData.userIds]);
 
     const handleCheckboxChange = (userId: number) => {
@@ -40,14 +46,25 @@ const UpdateProject: React.FC<UpdateProjectProps> = ({toggle, resetProjectId, pr
 
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await api.removeAllTeamMembers(projectId);
-        await Promise.all(
-            selectedUsers.map(userId => api.addTeamMember(projectId, userId))
-        );
-        await api.updateProject(projectId, values);
 
-        toggle();
-        resetProjectId();
+        if (!values.title || !values.description) {
+            toast.error("Title and Description are required");
+            return;
+        }
+
+        try {
+            await api.removeAllTeamMembers(projectId);
+            await Promise.all(
+                selectedUsers.map(userId => api.addTeamMember(projectId, userId))
+            );
+            await api.updateProject(projectId, values);
+            toggle();
+            resetProjectId();
+            toast.success("Project updated successfully");
+        } catch (error) {
+            console.error("Failed to update project:", error);
+            toast.error("Failed to update project");
+        }
     };
 
     return (
@@ -62,7 +79,7 @@ const UpdateProject: React.FC<UpdateProjectProps> = ({toggle, resetProjectId, pr
                             id="title"
                             placeholder="Enter project title"
                             value={values.title}
-                            onChange={e => setValues({...values, title: e.target.value})}
+                            onChange={e => setValues({ ...values, title: e.target.value })}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -73,7 +90,7 @@ const UpdateProject: React.FC<UpdateProjectProps> = ({toggle, resetProjectId, pr
                             id="description"
                             placeholder="Enter description"
                             value={values.description}
-                            onChange={e => setValues({...values, description: e.target.value})}
+                            onChange={e => setValues({ ...values, description: e.target.value })}
                             rows="5"
                         />
                     </FormGroup>

@@ -59,8 +59,8 @@ public class JwtService {
      * @return a signed JWT token as a String
      */
     public String generateToken(
-        Map<String, Object> extraClaims,
-        UserDetails userDetails
+            Map<String, Object> extraClaims,
+            UserDetails userDetails
     ){
         return Jwts
                 .builder()
@@ -76,7 +76,7 @@ public class JwtService {
     /**
      * Checks if the provided JWT is valid for the given user based on username and expiration.
      */
-     public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

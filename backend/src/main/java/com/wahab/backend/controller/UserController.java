@@ -41,7 +41,7 @@ public class UserController {
 
     @PutMapping(path = "/{userId}/edit-user")
     public void put(@PathVariable("userId") Long userId,
-                      @RequestBody User user) {
+                    @RequestBody User user) {
         userService.updateUserInfo(userId, user);
     }
 

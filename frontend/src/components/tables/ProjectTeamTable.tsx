@@ -13,6 +13,7 @@ interface ProjectTeamTableProps {
   toggleNewMember: () => void;
   isNewMemberOpen: boolean;
   projectId: number;
+  render: () => void;
 }
 
 // Define the component using these props
@@ -21,7 +22,8 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
   setProjectTeam,
   toggleNewMember,
   isNewMemberOpen,
-  projectId
+  projectId,
+    render,
 }) => {
 
   const [userId, setUserId] = useState<number>(0);
@@ -47,9 +49,9 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
   return (
     <Card className="shadow">
       <CardHeader className="border-0">
-        <Row className="align-items-center">
+        <Row className="border-0 d-flex justify-content-between align-items-center bg-white">
           <Col>
-            <h3 className="mb-0">Team</h3>
+            <h6 className="mb-2">Team</h6>
           </Col>
 
           <Col>
@@ -64,6 +66,7 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
                     projectId={projectId}
                     toggle={toggleNewMember}
                     setProjectTeam={setProjectTeam}
+                    render={render}
                   />
               </Modal>
             </div>
@@ -72,7 +75,7 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
       </CardHeader>
 
       <Table className="align-items-center table-flush" responsive>
-        <thead className="thead-light">
+        <thead className="rounded border-t-2 border-b-2">
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
@@ -85,26 +88,26 @@ const ProjectTeamTable: React.FC<ProjectTeamTableProps> = ({
             return (
               <tr key={user.id} className="teamRow">
                 <th>
-                  <Media>
+                  <Media style={{ textDecoration: 'none', color: '#D6A2E8' }}>
                     {user.firstName} {user.lastName}
                   </Media>
                 </th>
                 <td>{user.email}</td>
+                <td>{user.phoneNumber}</td>
                 <td className="text-right">
-                  <UncontrolledDropdown direction="right">
+                  <UncontrolledDropdown direction="start">
                     <DropdownToggle
-                        className="btn-icon-only text-light"
-                        href="#pablo"
+                        className="btn-icon-only text-black bg-transparent border border-gray-300 rounded"
                         role="button"
                         size="sm"
                         onClick={() => setUserId(user.id)}
                     >
-                      ⋯
+                      ⋮
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-arrow" right>
                       <DropdownItem
-                          onClick={() =>
-                              api.removeTeamMember(projectId, userId)
+                          onClick={async () =>
+                              await api.removeTeamMember(projectId, userId).then(() => render())
                           }
                       >
                         Remove Team Member

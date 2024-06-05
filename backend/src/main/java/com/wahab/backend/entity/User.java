@@ -53,7 +53,7 @@ public class User implements UserDetails {
     )
     private Set<Project> projects = new HashSet<>();
 
-    @OneToMany(mappedBy = "assignedUser")
+    @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Ticket> tickets = new HashSet<>();
 
     @Override

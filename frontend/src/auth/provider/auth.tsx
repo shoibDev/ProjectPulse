@@ -22,9 +22,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-      const result = await authService.login(email, password);
-      setIsAuthenticated(result);
-      return result;
+    const result = await authService.login(email, password);
+    setIsAuthenticated(result);
+    return result;
   };
 
   const logout = () => {
@@ -33,9 +33,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        {children}
+      </AuthContext.Provider>
   );
 };
 

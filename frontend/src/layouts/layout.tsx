@@ -1,48 +1,51 @@
-
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/provider/auth';
 import React from "react";
 
 export const Layout: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
+    const location = useLocation();
 
-  return (
-    <div>
-      {isAuthenticated && (
-        <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-            <div className="flex items-center ps-2.5 mb-5">
-              {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-6 me-3 sm:h-7" alt="Flowbite Logo" /> */}
-              <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">ProjectPulse</span>
+    const isActive = (path: string) => location.pathname === path;
+
+    return (
+        <div className="flex">
+            {isAuthenticated && (
+                <aside className="fixed top-0 left-0 z-40 w-64 h-full bg-gray-800 text-white transition-transform">
+                    <div className="flex flex-col justify-between h-full">
+                        <div>
+                            <div className="flex items-center justify-center p-4">
+                                <span className="text-xl font-semibold">ProjectPulse</span>
+                            </div>
+                            <ul className="space-y-2">
+                                <li>
+                                    <Link to="/" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                        Dashboard
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/tickets" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/tickets') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                        Tickets
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/administration" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                        Administration
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="p-4 mt-4">
+                            <Link to="/logout" className="flex items-center p-2 w-full text-white bg-gray-700 rounded-lg hover:bg-gray-600 no-underline">
+                                Logout
+                            </Link>
+                        </div>
+                    </div>
+                </aside>
+            )}
+            <div className={`flex-1 ${isAuthenticated ? 'ml-64' : ''}`}>
+                <Outlet />
             </div>
-            <ul className="space-y-2 font-medium">
-              <li>
-                <Link to="/" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <span className="ms-3">Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/tickets" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <span className="flex-1 ms-3 whitespace-nowrap">Tickets</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/Administration" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <span className="flex-1 ms-3 whitespace-nowrap">Administration</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/logout" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </aside>
-      )}
-      <div className="pl-64"> {/* This padding makes room for the sidebar */}
-        <Outlet />
-      </div>
-    </div>
-  );
+        </div>
+    );
 };

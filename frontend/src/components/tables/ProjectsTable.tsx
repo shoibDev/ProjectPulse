@@ -138,7 +138,7 @@ const ProjectsTable = () => {
                                 <td style={{ whiteSpace: "unset", wordWrap: "break-word" }}>
                                     <span>{project.description}</span>
                                 </td>
-                                <td><UserCell project={project}/></td>
+                                <td className={"w-100px"}><UserCell project={project}/></td>
                                 <td className="text-right">
                                     <UncontrolledDropdown className="me-2" direction="start">
                                         <DropdownToggle

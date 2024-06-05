@@ -11,14 +11,16 @@ import {
     Button,
 } from "reactstrap";
 import api from "../../utils/API.tsx";
+import { ToastContainer, toast } from 'react-toastify';
 
 interface CreateTicketProps {
     toggle: () => void;
     projectId: number;
     SetProjectTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
+    render: () => void;
 }
 
-const CreateTicket: React.FC<CreateTicketProps> = ({ toggle, projectId, SetProjectTickets }) => {
+const CreateTicket: React.FC<CreateTicketProps> = ({ toggle, projectId, SetProjectTickets, render }) => {
     const [ticketValues, setTicketValues] = useState<Ticket>({
         title: '',
         description: '',
@@ -51,6 +53,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ toggle, projectId, SetProje
 
                 await api.createTicket(projectId, ticketValues);
                 //SetProjectTickets(prevTickets => [...prevTickets, ticketValues]);
+                render();
                 toggle(); // Close the modal or form after submission
             } catch (error) {
                 console.error("Error getting creator:", error);

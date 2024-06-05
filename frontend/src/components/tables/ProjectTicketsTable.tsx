@@ -30,15 +30,16 @@ interface ProjectTicketsTableProps {
   projectId: number;
   projectTickets: Ticket[];
   setProjectTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
+  render: () => void;
 }
 
 const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
   projectId,
   projectTickets,
-  setProjectTickets,
+  setProjectTickets,  render,
 }) => {
 
-  const [selectedTicketId, setSelectedTicketId] = useState<number>(0);
+  const [selectedTicketId, setSelectedTicketId] = useState<number>();
   const [selectedTicket, setSelectedTicket] = useState<Ticket>({} as Ticket);
 
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
@@ -78,13 +79,14 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
 
   const deleteTicket = (id: number | undefined) => {
     api.deleteTicket(id);
+    render();
   };
   return (
     <Card className="shadow">
       <CardHeader>
-        <Row className="align-items-center">
+        <Row className="border-0 d-flex justify-content-between align-items-center bg-white">
           <Col>
-            <h3 className="mb-0">Tickets</h3>
+            <h6 className="mb-0">Tickets</h6>
           </Col>
           <Col>
             <div className="col text-right">
@@ -101,6 +103,7 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
                     projectId={projectId}
                     toggle={toggleCreateTicket}
                     setProjectTickets={setProjectTickets}
+                    render={render}
                   />
                 </Container>
               </Modal>
@@ -109,7 +112,7 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
         </Row>
       </CardHeader>
       <Table className="align-items-center table-flush" responsive>
-        <thead className="thead-light">
+        <thead className="rounded border-t-2 border-b-2">
           <tr>
             <th scope="col">Ticket Title</th>
             <th scope="col">Description</th>
@@ -122,13 +125,16 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
             return (
               <tr
                 key={ticket.id}
-                className="ticketRow"
+
                 onClick={() => {
-                  setSelectedTicketId(ticket.id);
+                  if (ticket.id !== undefined) {
+                    setSelectedTicketId(ticket.id);
+                    console.log(selectedTicketId)
+                  }
                 }}
               >
                 <th>
-                  <Media>{ticket.title}</Media>
+                  <Media style={{ textDecoration: 'none', color: '#D6A2E8' }}>{ticket.title}</Media>
                 </th>
                 <td
                   style={{
@@ -143,17 +149,13 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
                   {/* {ticket.last_name} */}
                 </td>
                 <td className="text-right">
-                  <UncontrolledDropdown>
+                  <UncontrolledDropdown direction="start">
                     <DropdownToggle
-                      className="btn-icon-only text-light"
-                      role="button"
-                      size="sm"
-                      color=""
-                      onClick={() => {
-                        setSelectedTicketId(ticket.id);
-                      }}
+                        className="btn-icon-only text-black bg-transparent border border-gray-300 rounded"
+                        role="button"
+                        size="sm"
                     >
-                      <i className="fas fa-ellipsis-v" />
+                      ⋮
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-arrow" right>
                       <DropdownItem onClick={toggleEditTicket}>
@@ -181,6 +183,7 @@ const ProjectTicketsTable: React.FC<ProjectTicketsTableProps> = ({
                 ticket={selectedTicket}
                 toggle={toggleEditTicket}
                 setProjectTickets={setProjectTickets}
+                render={render}
               />
             </Container>
           </Modal>

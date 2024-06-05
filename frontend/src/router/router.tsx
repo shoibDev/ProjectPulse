@@ -18,6 +18,7 @@ import DashboardPage from '../pages/DashboardPage';
 import AdminPage from '../pages/AdminPage';
 import TicketsPage from '../pages/TicketsPage';
 import ProjectTicketPage from '../pages/ProjectTicketPage';
+import RegistrationPage from "../pages/RegistrationPage.tsx";
 
 const LogoutPage = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const routes = createRoutesFromElements(
     {/* Login page in case unauthenticated */}
     <Route element={<UnAuthenticationGuard />}>
       <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegistrationPage />} />
     </Route>
   </Route>
 );

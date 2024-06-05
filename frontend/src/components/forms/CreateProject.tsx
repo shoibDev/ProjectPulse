@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     Container,
     Row,
@@ -9,9 +9,10 @@ import {
     Input,
     Button,
 } from "reactstrap";
+import { toast } from 'react-toastify';
 
 import api from '../../utils/API';
-import {User, Project} from "../../utils/types";
+import { User, Project } from "../../utils/types";
 
 interface CreateProjectProps {
     toggle?: () => void;
@@ -20,7 +21,7 @@ interface CreateProjectProps {
     render?: () => void;
 }
 
-const CreateProject: React.FC<CreateProjectProps> = ({toggle, setProjects, projects, render}) => {
+const CreateProject: React.FC<CreateProjectProps> = ({ toggle, setProjects, projects, render }) => {
     const [project, setProject] = useState<Project>({
         title: "",
         description: "",
@@ -44,11 +45,15 @@ const CreateProject: React.FC<CreateProjectProps> = ({toggle, setProjects, proje
         let isRendered = true;
 
         async function fetchUsers() {
-            const users = await api.getAllUsersExceptCurrent();
-            if (isRendered) setAvailableTeamMembers(users);
+            try {
+                const users = await api.getAllUsersExceptCurrent();
+                if (isRendered) setAvailableTeamMembers(users);
+            } catch {
+                toast.error("Failed to fetch users");
+            }
         }
 
-        fetchUsers().then(() => console.log("Users fetched"));
+        fetchUsers();
 
         return () => {
             isRendered = false;
@@ -58,25 +63,30 @@ const CreateProject: React.FC<CreateProjectProps> = ({toggle, setProjects, proje
     async function submit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const newProject = await api.createProject(project);
-        if (setProjects && projects) {
-            setProjects(prevProjects => [...prevProjects, newProject]);
+        if (!project.title || !project.description) {
+            toast.error("Title and Description are required");
+            return;
         }
 
-        // Handle all addTeamMember operations concurrently
-        const teamMemberPromises = project.userIds && newProject.id ? project.userIds.map(userId =>
-            api.addTeamMember(newProject.id, userId)
-        ) : [];
+        try {
+            const newProject = await api.createProject(project);
+            if (setProjects && projects) {
+                setProjects(prevProjects => [...prevProjects, newProject]);
+            }
 
-        await Promise.all(teamMemberPromises);
+            // Handle all addTeamMember operations concurrently
+            const teamMemberPromises = project.userIds && newProject.id ? project.userIds.map(userId =>
+                api.addTeamMember(newProject.id, userId)
+            ) : [];
+            await Promise.all(teamMemberPromises);
 
-        if (render) {
-            render();
-        }
-        setProject({title: "", description: "", userIds: []});
+            setProject({ title: "", description: "", userIds: [] });
+            render?.();
+            toggle?.();
 
-        if (toggle) {
-            toggle();
+            toast.success("Project created successfully");
+        } catch {
+            toast.error("Failed to create project");
         }
     }
 
@@ -86,7 +96,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({toggle, setProjects, proje
                 <Row>
                     <Col>
                         <FormGroup>
-                            <Label htmlFor="name" className="lease-form-label mandatory-entry">
+                            <Label htmlFor="title" className="lease-form-label mandatory-entry">
                                 Project Title
                             </Label>
                             <Input

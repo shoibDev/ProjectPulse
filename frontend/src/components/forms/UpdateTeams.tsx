@@ -11,9 +11,10 @@ interface UpdateTeamsProps {
     projectId: number;
     toggle: () => void;
     setProjectTeam: React.Dispatch<React.SetStateAction<User[]>>;
+    render: () => void;
 }
 
-const UpdateTeams: React.FC<UpdateTeamsProps> = ({ projectId, toggle, setProjectTeam }) => {
+const UpdateTeams: React.FC<UpdateTeamsProps> = ({ projectId, toggle, setProjectTeam, render }) => {
     const [availableUsers, setAvailableUsers] = useState<User[]>([]);
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
@@ -33,10 +34,10 @@ const UpdateTeams: React.FC<UpdateTeamsProps> = ({ projectId, toggle, setProject
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("Submitting form with selected user IDs:", selectedUserIds);
         await api.addTeamMember(projectId, selectedUserIds)  // Assuming this API call exists
             .then(response => {
                 console.log("Team members added successfully:", response);
+                render();  // This might trigger a re-fetch of the project team members
                 toggle();  // This might close the modal or clear the form.
             })
             .catch(error => {

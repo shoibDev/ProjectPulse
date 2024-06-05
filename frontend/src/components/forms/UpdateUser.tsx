@@ -1,14 +1,14 @@
 import {User} from "../../utils/types.tsx";
-import {useState} from "react";
+import React, {useState} from "react";
 import {Button, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import api from "../../utils/API.tsx";
 
 interface UpdateUserProps {
     user: User;
     setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-    toggle: () => void;  // Assuming a toggle function to close the modal
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({ user, setUsers, toggle }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({ user, setUsers }) => {
     const [values, setValues] = useState<User>(user);  // Initialize with the user passed in props
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -17,30 +17,21 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user, setUsers, toggle }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Call the API to update the user
-        // Example: await api.updateUser(values);
+        await api.editUser(values.id, values);
         // Update the users state in the parent component
         setUsers(prevUsers => prevUsers.map(u => u.id === values.id ? values : u));
-        toggle();  // Close the modal
+
     };
 
     // Define removeUser if needed
     const removeUser = async () => {
         // Example: await api.deleteUser(values.id);
         setUsers(prevUsers => prevUsers.filter(u => u.id !== values.id));
-        toggle();  // Close the modal
+
     };
 
     return (
         <div>
-            <Row className="m-4">
-                <Col md="12">
-                    <h2 className="text-primary">
-                        {values.firstName} {values.lastName}
-                    </h2>
-                </Col>
-            </Row>
-
             <Form onSubmit={handleSubmit}>
                 <Row className="m-4">
                     <Col md="6">

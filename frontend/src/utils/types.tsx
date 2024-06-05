@@ -1,6 +1,6 @@
 export interface User{
   id: number;
-  firstName: string; 
+  firstName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
@@ -31,3 +31,4 @@ export interface Ticket{
   assignedUserId?: number;
   projectId?: number;
 }
+

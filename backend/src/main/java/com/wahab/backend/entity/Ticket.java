@@ -24,7 +24,7 @@ public class Ticket {
 
     private String creator;
 
-    @Column(nullable = false, unique = true)
+    //@Column(nullable = false, unique = true)
     private String title;
 
     private String description;
