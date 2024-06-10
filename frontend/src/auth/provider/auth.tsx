@@ -4,36 +4,42 @@ import { authService } from '../services/AuthService';
 // Adjust the default context to match the function's return type
 const AuthContext = React.createContext({
   isAuthenticated: false,
-  login: async (_email: string, _password: string): Promise<boolean> => { return false; },
+  userRole: null,
+  login: async (_email: string, _password: string): Promise<boolean> => false,
   logout: () => {},
 });
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
+  const [userRole, setUserRole] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    // Check token on component mount
     const checkToken = async () => {
       const isValid = await authService.validateToken();
       setIsAuthenticated(isValid);
+      if (isValid) {
+        setUserRole(localStorage.getItem('role')); // Update role if token is valid
+      }
     };
     checkToken();
-    console.log(isAuthenticated);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     const result = await authService.login(email, password);
+
     setIsAuthenticated(result);
+    setUserRole(localStorage.getItem('role'));
     return result;
   };
 
   const logout = () => {
     authService.logout();
     setIsAuthenticated(false);
+    setUserRole(null);
   };
 
   return (
-      <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      <AuthContext.Provider value={{ isAuthenticated, userRole, login, logout }}>
         {children}
       </AuthContext.Provider>
   );

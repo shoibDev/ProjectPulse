@@ -1,38 +1,24 @@
 import axios from 'axios';
-import Axios from "axios";
 
-Axios.defaults.headers.post["Content-Type"] = "application/json";
-
-export type Authentication = {
-  value : boolean;
-}
 const BASE_URL = 'http://localhost:8080/api/v1';
-
-class T {
-}
 
 class AuthService {
   isAuthenticated = false;
+  userRole = null;
 
   async login(email: string, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`${BASE_URL}/auth/authenticate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (!response.ok) {
+      const response = await axios.post(`${BASE_URL}/auth/authenticate`, { email, password });
+      if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const { token, role } = response.data;
 
-      const data = await response.json();
-      const { token } = data;
-      console.log('Token received:', token); // Debugging line
       localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+
       this.isAuthenticated = true;
+      this.userRole = role;
       return true;
     } catch (error) {
       console.error('Login error:', error);
@@ -41,44 +27,37 @@ class AuthService {
     }
   }
 
-
-  logout(){
+  logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     this.isAuthenticated = false;
-    return Promise.resolve();  // Ensure to return a promise
+    this.userRole = null;
+    return Promise.resolve();
   }
-
-  getIsAuthenticated() {
-    return this.isAuthenticated;
-  }
-
 
   async validateToken(): Promise<boolean> {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('No token found');
       return false;
     }
 
-    return axios.get<{ isValid: boolean}>(`${BASE_URL}/auth/validateToken`, {
-      params: {
-        token: localStorage.getItem("token")
-      }
-    })
-        .then(response => {
-          const isValid: T = response.data;
-          console.log(response)
+    try {
+      const response = await axios.get(`${BASE_URL}/auth/validateToken`, {
+        params: { token }
+      });
+      const isValid = response.data.isValid;
 
-          this.isAuthenticated = !isValid;
-          return !isValid;
-        })
-        .catch(error => {
-          console.error('Token validation error:', error);
-          this.isAuthenticated = false;
-          return false;
-        });
+      this.isAuthenticated = isValid;
+      if (!isValid) {
+        this.logout();  // Ensure the user is logged out if the token is invalid
+      }
+      return isValid;
+    } catch (error) {
+      console.error('Token validation error:', error);
+      this.isAuthenticated = false;
+      return false;
+    }
   }
 }
-
 
 export const authService = new AuthService();

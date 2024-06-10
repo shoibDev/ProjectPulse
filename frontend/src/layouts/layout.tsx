@@ -3,7 +3,7 @@ import { useAuth } from '../auth/provider/auth';
 import React from "react";
 
 export const Layout: React.FC = () => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, userRole } = useAuth();
     const location = useLocation();
 
     const isActive = (path: string) => location.pathname === path;
@@ -19,24 +19,36 @@ export const Layout: React.FC = () => {
                             </div>
                             <ul className="space-y-2">
                                 <li>
-                                    <Link to="/" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                    <Link to="/"
+                                          className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
                                         Dashboard
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/tickets" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/tickets') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                    <Link to="/tickets"
+                                          className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/tickets') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
                                         Tickets
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/administration" className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                    {isAuthenticated && userRole === 'DEVELOPER' && (
+                                    <li>
+                                        <Link to="/administration"
+                                              className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
+                                            Administration
+                                        </Link>
+                                    </li>
+                                )}
+                                {/*<li>
+                                    <Link to="/administration"
+                                          className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
                                         Administration
                                     </Link>
-                                </li>
+                                </li>*/}
                             </ul>
                         </div>
                         <div className="p-4 mt-4">
-                            <Link to="/logout" className="flex items-center p-2 w-full text-white bg-gray-700 rounded-lg hover:bg-gray-600 no-underline">
+                            <Link to="/logout"
+                                  className="flex items-center p-2 w-full text-white bg-gray-700 rounded-lg hover:bg-gray-600 no-underline">
                                 Logout
                             </Link>
                         </div>

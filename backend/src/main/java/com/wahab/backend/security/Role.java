@@ -21,8 +21,8 @@ public enum Role {
             Sets.newHashSet(
                     Permission.MANAGER_READ,
                     Permission.MANAGER_WRITE,
-                    Permission.MANAGER_EDIT
-                    ,
+                    Permission.MANAGER_EDIT,
+
                     Permission.DEVELOPER_READ,
                     Permission.DEVELOPER_WRITE,
                     Permission.DEVELOPER_EDIT
@@ -44,10 +44,6 @@ public enum Role {
                     Permission.DEVELOPER_WRITE,
                     Permission.DEVELOPER_EDIT
             )
-    ),
-
-    GOD(
-            Sets.newHashSet()
     );
 
     private final Set<Permission> permissions;
