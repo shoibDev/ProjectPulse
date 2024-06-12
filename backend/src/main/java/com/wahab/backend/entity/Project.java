@@ -38,7 +38,7 @@ public class Project {
     @UpdateTimestamp
     private LocalDateTime lastUpdated;
 
-    @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "projects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<User> users = new HashSet<>();
 
 

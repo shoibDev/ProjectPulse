@@ -30,7 +30,7 @@ export const Layout: React.FC = () => {
                                         Tickets
                                     </Link>
                                 </li>
-                                    {isAuthenticated && userRole === 'DEVELOPER' && (
+                                    {isAuthenticated && userRole === 'ADMIN' && (
                                     <li>
                                         <Link to="/administration"
                                               className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
@@ -38,12 +38,6 @@ export const Layout: React.FC = () => {
                                         </Link>
                                     </li>
                                 )}
-                                {/*<li>
-                                    <Link to="/administration"
-                                          className={`flex items-center p-2 rounded-lg hover:bg-gray-700 ${isActive('/administration') ? 'text-[#c080f0]' : 'text-white'} no-underline`}>
-                                        Administration
-                                    </Link>
-                                </li>*/}
                             </ul>
                         </div>
                         <div className="p-4 mt-4">

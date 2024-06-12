@@ -14,9 +14,12 @@ const UserCell = ({ project }: { project: Project }) => {
     }, [project.userIds]);
 
     return (
-        <td>
-            {users.map((user, key) => (
-                <span key={key}>{user.firstName} {user.lastName}<br /></span>
+        <td className="py-2">
+            {users.map((user, index) => (
+                <span key={index}
+                      className="inline-block bg-purple-200 text-purple-800 text-xs px-2 rounded-full uppercase font-semibold tracking-wide mr-2 mb-2">
+            {user.firstName} {user.lastName}
+        </span>
             ))}
         </td>
     );

@@ -6,6 +6,7 @@ import com.wahab.backend.entity.Ticket;
 import com.wahab.backend.repository.TicketRepository;
 import com.wahab.backend.service.TicketService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -23,6 +24,7 @@ public class TicketController {
     private final TicketMapper ticketMapper;
 
     @PostMapping("/{projectId}")
+    @PreAuthorize("hasAuthority('developer:write')")
     public TicketDTO createTicket(Principal principal,
                                   @PathVariable Long projectId,
                                   @RequestBody TicketDTO ticketDTO) {
@@ -42,11 +44,13 @@ public class TicketController {
     }
 
     @PutMapping("/{ticketId}")
+    @PreAuthorize("hasAuthority('developer:edit')")
     public TicketDTO updateTicket(@PathVariable Long ticketId, @RequestBody TicketDTO ticketDTO) {
         return ticketService.updateTicket(ticketId, ticketDTO);
     }
 
     @DeleteMapping("/{ticketId}")
+    @PreAuthorize("hasAuthority('developer:delete')")
     public void deleteTicketById(@PathVariable Long ticketId) {
         ticketService.deleteTicketById(ticketId);
     }

@@ -9,16 +9,26 @@ const BASE_URL = 'http://localhost:8080/api/v1';
 
 class API {
 
-    async register(firstName: string, lastName: string, email: string, phoneNumber: string, password: string){
-        return axios.post(`${BASE_URL}/auth/register`, { firstName, lastName, email, phoneNumber, password })
-            .then(response => {
-                console.log(response);
-                return true;  // Return true on successful registration
-            })
-            .catch(error => {
-                console.error('Registration error:', error);
-                return false;  // Return false on registration failure
+    async register(firstName: string, lastName: string, email: string, phoneNumber: string, password: string): Promise<boolean> {
+        try {
+            const response = await fetch(`${BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ firstName, lastName, email, phoneNumber, password })
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            console.log(await response.json());  // Log the response data
+            return true;  // Return true on successful registration
+        } catch (error) {
+            console.error('Registration error:', error);
+            return false;  // Return false on registration failure
+        }
     }
 
     // User APIs

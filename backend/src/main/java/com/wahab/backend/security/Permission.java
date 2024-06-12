@@ -13,10 +13,12 @@ public enum Permission {
     MANAGER_READ("manager:read"),
     MANAGER_WRITE("manager:write"),
     MANAGER_EDIT("manager:edit"),
+    MANAGER_DELETE("manager:delete"),
 
     DEVELOPER_READ("developer:read"),
     DEVELOPER_WRITE("developer:write"),
-    DEVELOPER_EDIT("developer:edit");
+    DEVELOPER_EDIT("developer:edit"),
+    DEVELOPER_DELETE("developer:delete");
 
     private final String permission;
 

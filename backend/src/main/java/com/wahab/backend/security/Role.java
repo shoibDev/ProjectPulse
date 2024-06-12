@@ -13,7 +13,8 @@ public enum Role {
             Sets.newHashSet(
                     Permission.DEVELOPER_READ,
                     Permission.DEVELOPER_WRITE,
-                    Permission.DEVELOPER_EDIT
+                    Permission.DEVELOPER_EDIT,
+                    Permission.DEVELOPER_DELETE
             )
     ),
 
@@ -22,10 +23,12 @@ public enum Role {
                     Permission.MANAGER_READ,
                     Permission.MANAGER_WRITE,
                     Permission.MANAGER_EDIT,
+                    Permission.MANAGER_DELETE,
 
                     Permission.DEVELOPER_READ,
                     Permission.DEVELOPER_WRITE,
-                    Permission.DEVELOPER_EDIT
+                    Permission.DEVELOPER_EDIT,
+                    Permission.DEVELOPER_DELETE
             )
     ),
 
@@ -39,10 +42,12 @@ public enum Role {
                     Permission.MANAGER_READ,
                     Permission.MANAGER_WRITE,
                     Permission.MANAGER_EDIT,
+                    Permission.MANAGER_DELETE,
 
                     Permission.DEVELOPER_READ,
                     Permission.DEVELOPER_WRITE,
-                    Permission.DEVELOPER_EDIT
+                    Permission.DEVELOPER_EDIT,
+                    Permission.DEVELOPER_DELETE
             )
     );
 

@@ -8,11 +8,20 @@ class AuthService {
 
   async login(email: string, password: string): Promise<boolean> {
     try {
-      const response = await axios.post(`${BASE_URL}/auth/authenticate`, { email, password });
-      if (response.status !== 200) {
+      const response = await fetch(`${BASE_URL}/auth/authenticate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const { token, role } = response.data;
+
+      const data = await response.json();
+      const { token, role } = data;
 
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);

@@ -10,6 +10,7 @@ import com.wahab.backend.repository.UserRepository;
 import com.wahab.backend.service.ProjectService;
 import com.wahab.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -25,20 +26,19 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
-    private final UserService userService;
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @PostMapping("/create-project")
+    @PreAuthorize("hasAuthority('manager:write')")
     public ProjectDTO createProject(Principal principal, @RequestBody ProjectDTO projectDTO){
         return projectService.createProject(principal, projectDTO);
     }
 
     @PutMapping("/{projectId}/update-project")
+    @PreAuthorize("hasAuthority('manager:edit')")
     public ProjectDTO updateProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectDTO projectDTO){
         return projectService.updateProject(projectId, projectDTO);
     }
-
 
     @GetMapping("/assigned-projects")
     public List<ProjectDTO> getAssignedProjects(Principal principal){
@@ -50,8 +50,6 @@ public class ProjectController {
         return projectService.findProjectById(projectId);
     }
 
-
-
     @GetMapping("/{projectId}/add-team-member-form")
     public List<UserDTO> getAvailableUsers(@PathVariable("projectId") Long projectId){
         return projectService.getNoneProjectUsers(projectId);
@@ -59,11 +57,13 @@ public class ProjectController {
 
 
     @DeleteMapping("/{projectId}/delete")
+    @PreAuthorize("hasAuthority('manager:delete')")
     public void deleteProject(@PathVariable("projectId") Long projectId) {
         projectService.deleteProjectById(projectId);
     }
 
     @PutMapping("/{projectId}/user/{userId}")
+    @PreAuthorize("hasAuthority('manager:edit')")
     public void addTeamMember(@PathVariable("projectId") Long projectId,
                               @PathVariable("userId") Long userId
     ) {
@@ -71,6 +71,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}/user/{userId}")
+    @PreAuthorize("hasAuthority('manager:edit')")
     public void removeUser(@PathVariable("projectId") Long projectId, @PathVariable("userId") Long userId){
         projectService.removeTeamMember(projectId, userId);
     }
@@ -81,7 +82,6 @@ public class ProjectController {
         projectService.removeAllUsers(projectId);
     }
 
-
     @GetMapping("/{projectId}/users")
     public List<UserDTO> getProjectDevs(@PathVariable("projectId") Long projectId) {
         Project project = projectRepository.getReferenceById(projectId);
@@ -91,5 +91,4 @@ public class ProjectController {
                 .map(userMapper)
                 .collect(Collectors.toList());
     }
-
 }

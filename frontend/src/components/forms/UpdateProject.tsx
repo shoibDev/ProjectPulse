@@ -94,20 +94,23 @@ const UpdateProject: React.FC<UpdateProjectProps> = ({ toggle, resetProjectId, p
                             rows="5"
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Label>Update Team Members</Label>
-                        {allUsers.map(user => (
-                            <div key={user.id}>
-                                <Label check>
+                    <FormGroup className="mt-4">
+                        <Label className="block mb-2">Update Team Members</Label>
+                        <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-lg p-3">
+                            {allUsers.map(user => (
+                                <div key={user.id} className="flex items-center mb-2">
                                     <Input
                                         type="checkbox"
+                                        className="accent-purple-500 h-5 w-5 text-purple-600"
                                         checked={selectedUsers.includes(user.id)}
                                         onChange={() => handleCheckboxChange(user.id)}
-                                    />{' '}
-                                    {user.firstName} {user.lastName}
-                                </Label>
-                            </div>
-                        ))}
+                                    />
+                                    <Label className="ml-3 text-sm text-gray-700 cursor-pointer">
+                                        {user.firstName} {user.lastName}
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
                     </FormGroup>
                 </Row>
                 <Button color="success" type="submit">Submit</Button>

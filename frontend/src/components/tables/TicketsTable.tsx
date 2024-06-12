@@ -4,6 +4,7 @@ import { Ticket } from '../../utils/types'
 import PaginationComponent from "./PaginationComponent";
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardFooter, CardHeader, Table } from 'reactstrap';
+import ProjectCellName from "./ProjectCellName.tsx";
 
 
 const TicketsTable = () => {
@@ -52,7 +53,7 @@ const TicketsTable = () => {
                 <th>Project Name</th>
                 <th>Ticket Name</th>
                 <th>Ticket Description</th>
-                <th>Ticket Author</th>
+                <th>Ticket Priority</th>
               </tr>
             </thead>
             <tbody>
@@ -60,12 +61,12 @@ const TicketsTable = () => {
                 <tr key={ticket.id}>
                   <td>
                     <Link to={`/project/${ticket.projectId}`} style={{ textDecoration: 'none', color: '#D6A2E8' }}>
-                      {ticket.projectId}
+                      <ProjectCellName projectId={ticket.projectId} />
                     </Link>
                   </td>
                   <td>{ticket.title}</td>
                   <td>{ticket.description}</td>
-                  <td>{ticket.creator}</td>
+                   <td>{ticket.priority}</td>
                 </tr>
               ))}
             </tbody>
