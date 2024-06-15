@@ -1,5 +1,5 @@
 import React, {useState, FormEvent} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate, Link} from 'react-router-dom';
 import {useAuth} from '../auth/provider/auth';
 
 interface LoginForm {
@@ -34,8 +34,8 @@ const LoginPage: React.FC = () => {
         <div className="min-h-screen bg-cover bg-center"
              style={{backgroundImage: "url('src/components/images/authenticateBG.png')"}}>
             <section className="flex items-center justify-center min-h-screen">
-                <div className="bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full mx-auto">
-                    <h1 className="text-lg font-bold mb-4 text-deep-purple">Login</h1> {/* Deep purple text */}
+                <div className="bg-white p-6 rounded-xl shadow-lg max-w-xl w-full mx-auto"> {/* Adjusted max-width */}
+                    <h1 className="text-lg font-bold mb-4 text-deep-purple">Login</h1>
                     <form onSubmit={handleLogin}>
                         <div className="mb-4">
                             <label htmlFor="email" className="block text-sm font-medium text-deep-purple">Email</label>
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
                                 required
                             />
                         </div>
-                        <div className="mb-6">
+                        <div className="mb-4">
                             <label htmlFor="password"
                                    className="block text-sm font-medium text-deep-purple">Password</label>
                             <input
@@ -66,6 +66,9 @@ const LoginPage: React.FC = () => {
                                 className="w-full bg-[#c080f0] hover:bg-[#a070d0] text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
                             Log in
                         </button>
+                        <div className="mt-4 text-center">
+                            <Link to="/register" className="text-sm text-cyan-600 hover:text-cyan-800">Need an account? Sign up</Link>
+                        </div>
                     </form>
                 </div>
             </section>

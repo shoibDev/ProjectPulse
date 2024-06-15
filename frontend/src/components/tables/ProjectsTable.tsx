@@ -1,6 +1,7 @@
 // React imports
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
+import {useAuth} from '../../auth/provider/auth';
 
 // Component imports
 import CreateProject from '../forms/CreateProject';
@@ -35,6 +36,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // ProjectsTable: Manages the display and interaction with the project list
 const ProjectsTable = () => {
+
+    const { userRole } = useAuth();
+
     // State management for project data and modals
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedProjectId, setSelectedProjectId] = useState<number>();
@@ -113,9 +117,11 @@ const ProjectsTable = () => {
             <Card className="shadow p-3 mb-5 rounded">
                 <CardHeader className="border-0 d-flex justify-content-between align-items-center bg-white">
                     <h6 className="mb-2">Projects</h6>
-                    <Button color="primary" onClick={toggleNewProject} size="sm">
-                        New Project
-                    </Button>
+                    {(userRole === 'ADMIN' || userRole === 'MANAGER') && (
+                        <Button color="primary" onClick={toggleNewProject} size="sm">
+                            New Project
+                        </Button>
+                    )}
                 </CardHeader>
                 <CardBody>
                     <Table>
@@ -142,20 +148,23 @@ const ProjectsTable = () => {
                                 <td className={"w-100px"}><UserCell project={project}/></td>
 
                                 <td className="text-right">
-                                    <UncontrolledDropdown className="me-2" direction="start">
-                                        <DropdownToggle
-                                            className="btn-icon-only text-black bg-transparent border border-gray-300 rounded"
-                                            role="button"
-                                            size="sm"
-                                            onClick={() => setProjectId(project.id)}
-                                        >
-                                            ⋮
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem onClick={toggleEditProject}>EDIT</DropdownItem>
-                                            <DropdownItem onClick={deleteProject}>DELETE</DropdownItem>
-                                        </DropdownMenu>
-                                    </UncontrolledDropdown>
+                                    {(userRole === 'ADMIN' || userRole === 'MANAGER') && (
+                                        <UncontrolledDropdown className="me-2" direction="start">
+                                            <DropdownToggle
+                                                className="btn-icon-only text-black bg-transparent border border-gray-300 rounded"
+                                                role="button"
+                                                size="sm"
+                                                onClick={() => setProjectId(project.id)}
+                                            >
+                                                ⋮
+                                            </DropdownToggle>
+                                            <DropdownMenu>
+                                                <DropdownItem onClick={toggleEditProject}>EDIT</DropdownItem>
+                                                <DropdownItem onClick={deleteProject}>DELETE</DropdownItem>
+                                            </DropdownMenu>
+                                        </UncontrolledDropdown>
+                                    )}
+
                                 </td>
                             </tr>
                         ))}

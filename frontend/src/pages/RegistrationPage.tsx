@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from "../utils/API.tsx";
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import '../index.css';
 
@@ -131,13 +131,17 @@ const RegistrationPage: React.FC = () => {
                                     required
                                 />
                             </div>
-                            <div className="col-span-2">
+                            <div className="col-span-2 text-center">
                                 <button
                                     type="submit"
                                     className="w-full text-white bg-[#c080f0] hover:bg-[#a070d0] font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#c080f0] focus:ring-opacity-50"
                                 >
                                     Create an account
                                 </button>
+                            </div>
+                            <div className="col-span-2 text-center mt-4">
+                                <Link to="/login" className="text-sm text-cyan-600 hover:text-cyan-800">Already Have an
+                                    Account? Login</Link>
                             </div>
                         </form>
                     </div>
