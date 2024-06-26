@@ -17,6 +17,23 @@ ProjectPulse is a robust bug tracking system designed to facilitate efficient pr
 - **PostgreSQL:** Reliable and powerful open source relational database.
 - **Docker:** Used to containerize PostgreSQL, ensuring a consistent environment across different development stages.
 
+## Authentication Process
+
+### Key Components
+- **UserDetailsService**: Custom service that loads user data from the database. It is crucial for authenticating users based on their username, which in this case, is the user's email.
+- **AuthenticationProvider**: Uses `DaoAuthenticationProvider` for authenticating users. It incorporates the `UserDetailsService` for retrieving user details and `PasswordEncoder` for verifying user passwords against encrypted values stored in the database.
+- **PasswordEncoder**: Implements `BCryptPasswordEncoder` to securely hash and verify passwords.
+- **JwtService**: Manages all operations related to JWTs, including token generation, expiration validation, and extraction of the username from tokens.
+- **JwtAuthenticationFilter**: An HTTP request filter that checks for valid JWTs in the Authorization header of incoming requests and sets the authentication in the security context.
+
+### Security Configurations
+- **HttpSecurity**: Configures security constraints on the web layer. It disables CSRF protection due to the stateless nature of JWTs and configures session management to be stateless.
+- **WebSecurity**: Enables method-level security across the application, ensuring that certain methods can only be accessed by users with specific roles.
+
+### Authentication Flow
+
+![image](https://github.com/shoibDev/ProjectPulse/assets/86535871/09d2735b-085d-48c5-bb7d-e7c2744647dd)
+   
 ## Visuals
 
 ![chrome-capture-2024-6-25](https://github.com/shoibDev/ProjectPulse/assets/86535871/b7ac6626-9c99-4179-95f3-7b8565a628ca)
