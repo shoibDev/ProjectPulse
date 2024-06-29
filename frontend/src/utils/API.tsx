@@ -1,6 +1,6 @@
 import Axios from "axios";
 import {Project, Ticket, User} from './types.tsx'
-import axios from "axios";
+
 
 Axios.defaults.baseURL = "http://localhost:8080/api/v1";
 Axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem("token")}`;
