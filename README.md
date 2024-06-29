@@ -38,22 +38,4 @@ ProjectPulse is a robust bug tracking system designed to facilitate efficient pr
 
 ![chrome-capture-2024-6-25](https://github.com/shoibDev/ProjectPulse/assets/86535871/b7ac6626-9c99-4179-95f3-7b8565a628ca)
 
-## Installation
-```bash
-git clone https://github.com/shoibDev/ProjectPulse.git
-cd projectpulse
-```
 
-### Setting Up PostgreSQL with Docker
-To set up the PostgreSQL database using Docker, run the following command:
-```bash
-docker run --name postgresql-container -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-```
-
-# Start the backend server
-cd backend
-./mvnw spring-boot:run
-
-# Start the frontend development server
-cd frontend
-npm start
