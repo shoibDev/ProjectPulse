@@ -1,4 +1,4 @@
-# ProjectPulse
+# ProjectPulse (Underdevelopment)
 
 ## Introduction
 ProjectPulse is a robust bug tracking system designed to facilitate efficient project management and issue resolution. Built with Spring Boot, React.js, TypeScript, and PostgreSQL, this system ensures secure and efficient handling of project data and user interactions.
