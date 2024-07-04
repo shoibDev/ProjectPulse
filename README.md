@@ -33,9 +33,9 @@ ProjectPulse is a robust bug tracking system designed to facilitate efficient pr
 ### Authentication Flow
 
 ![image](https://github.com/shoibDev/ProjectPulse/assets/86535871/09d2735b-085d-48c5-bb7d-e7c2744647dd)
-   
+
 ## Visuals
 
-![chrome-capture-2024-6-25](https://github.com/shoibDev/ProjectPulse/assets/86535871/b7ac6626-9c99-4179-95f3-7b8565a628ca)
+https://github.com/shoibDev/ProjectPulse/assets/86535871/7959607c-af44-4b01-83a6-48b64d14d9c0
 
 
