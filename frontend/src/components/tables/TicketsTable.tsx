@@ -39,50 +39,69 @@ const TicketsTable = () => {
     );
   }, [userTickets, currentTicketsPage]);
 
+  const getPriorityClass = (priority: string) => {
+    switch (priority) {
+      case 'immediate':
+        return 'bg-purple-600 text-white'; // Distinctive purple for the most urgent tickets
+      case 'high':
+        return 'bg-red-500 text-white';
+      case 'medium':
+        return 'bg-yellow-500 text-black';
+      case 'low':
+        return 'bg-green-500 text-white';
+      default:
+        return 'bg-gray-200 text-gray-800'; // Fallback for undefined or other priorities
+    }
+  };
+
 
   return (
-    <div className="p-3 mb-2 bg-light text-dark z-20 -mt-12 w-full">
-      <Card className="shadow p-3 mb-5 rounded bg-white">
-        <CardHeader className="border-0 d-flex justify-content-between align-items-center bg-white ">
-          <h6 className="mb-2">Tickets</h6>
-        </CardHeader>
-        <CardBody>
-          <Table>
-            <thead className="rounded border-t-2 border-b-2">
+      <div className="p-3 mb-2 bg-light text-dark z-20 -mt-12 w-full">
+        <Card className="shadow p-3 mb-5 rounded bg-white">
+          <CardHeader className="border-0 d-flex justify-content-between align-items-center bg-white">
+            <h6 className="mb-2">Tickets</h6>
+          </CardHeader>
+          <CardBody>
+            <Table>
+              <thead className="rounded border-t-2 border-b-2">
               <tr>
                 <th>Project Name</th>
                 <th>Ticket Name</th>
                 <th>Ticket Description</th>
                 <th>Ticket Priority</th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {ticketsData.map((ticket) => (
-                <tr key={ticket.id}>
-                  <td>
-                    <Link to={`/project/${ticket.projectId}`} style={{ textDecoration: 'none', color: '#D6A2E8' }}>
-                      <ProjectCellName projectId={ticket.projectId} />
-                    </Link>
-                  </td>
-                  <td>{ticket.title}</td>
-                  <td>{ticket.description}</td>
-                   <td>{ticket.priority}</td>
-                </tr>
+                  <tr key={ticket.id}>
+                    <td>
+                      <Link to={`/project/${ticket.projectId}`} style={{ textDecoration: 'none', color: '#D6A2E8' }}>
+                        <ProjectCellName projectId={ticket.projectId} />
+                      </Link>
+                    </td>
+                    <td>{ticket.title}</td>
+                    <td>{ticket.description}</td>
+                    <td>
+                  <span className={`inline-block text-xs px-2 rounded-full uppercase font-semibold tracking-wide mr-2 mb-2 ${getPriorityClass(ticket.priority)}`}>
+                    {ticket.priority}
+                  </span>
+                    </td>
+                  </tr>
               ))}
-            </tbody>
-          </Table>
-          <CardFooter className="py-4 bg-white flex justify-center">
-                <PaginationComponent
+              </tbody>
+            </Table>
+            <CardFooter className="py-4 bg-white flex justify-center">
+              <PaginationComponent
                   total={totalTickets}
                   itemsPerPage={ticketsPerPage}
                   currentPage={currentTicketsPage}
                   onPageChange={(page) => setCurrentTicketsPage(page)}
-                />
-              </CardFooter>
-        </CardBody>
-      </Card>
-    </div>
-  )
+              />
+            </CardFooter>
+          </CardBody>
+        </Card>
+      </div>
+  );
 }
 
 export default TicketsTable

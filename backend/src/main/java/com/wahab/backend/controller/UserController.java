@@ -23,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("load-Principal")
+    @GetMapping("principal")
     public UserDTO getCurrentUser(Principal principal){
         return userService.getPrincipalUser(principal);
     }

@@ -43,6 +43,15 @@ class API {
         return response.data;
     }
 
+    async getPrincipal(): Promise<User> {
+        const response = await Axios.get(`user/principal`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        return response.data;
+    }
+
 
     async getAllUsersExceptCurrent(): Promise<User[]> {
         const response = await Axios.get(`user/exclude-current`, {

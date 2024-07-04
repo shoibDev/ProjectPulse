@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../../utils/API";
 import { Ticket } from "../../utils/types";
-import {
-    Card,
-    CardHeader,
-    Row,
-    Col,
-    List,
-} from "reactstrap";
+
 
 interface SelectedTicketProps {
     ticketId: number | undefined;

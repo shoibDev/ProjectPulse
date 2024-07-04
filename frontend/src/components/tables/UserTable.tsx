@@ -29,6 +29,7 @@ const UserTable = () => {
     useEffect(() => {
         if (selectedUserId) {
             const userData = users.find(user => user.id === selectedUserId);
+            console.log(userData);
             setSelectedUserData(userData);
         }
     }, [selectedUserId, users]);
@@ -59,7 +60,7 @@ const UserTable = () => {
                     <Card className="shadow">
                         <CardHeader className="mb-2">Edit User Information</CardHeader>
                         {selectedUserId && selectedUserData && (
-                            <UpdateUser user={selectedUserData} setUsers={setUsers} />
+                            <UpdateUser key={selectedUserData.id} user={selectedUserData} setUsers={setUsers} />
                         )}
                     </Card>
                 </Col>

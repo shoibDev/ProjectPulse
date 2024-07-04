@@ -1,7 +1,14 @@
-import {User} from "../../utils/types.tsx";
-import React, {useState} from "react";
-import {Button, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
-import api from "../../utils/API.tsx";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import api from "../../utils/API";
+
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+}
 
 interface UpdateUserProps {
     user: User;
@@ -9,26 +16,35 @@ interface UpdateUserProps {
 }
 
 const UpdateUser: React.FC<UpdateUserProps> = ({ user, setUsers }) => {
-    const [values, setValues] = useState<User>(user);  // Initialize with the user passed in props
+    const [principal, setPrincipal] = useState<User>(user); // Initialize with the user passed in props
+    const [values, setValues] = useState<User>(user); // Initialize with the user passed in props
+
+    useEffect(() => {
+        const fetchPrincipal = async () => {
+            const principalData = await api.getPrincipal();
+            setPrincipal(principalData);
+        };
+
+        fetchPrincipal().then(() => console.log("Principal fetched"));
+    }, [values.id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setValues({...values, [e.target.name]: e.target.value });
+        setValues({...values, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await api.editUser(values.id, values);
-        // Update the users state in the parent component
+        //await api.editUser(values.id, values);
         setUsers(prevUsers => prevUsers.map(u => u.id === values.id ? values : u));
-
     };
 
-    // Define removeUser if needed
     const removeUser = async () => {
-        // Example: await api.deleteUser(values.id);
+        //await api.deleteUser(values.id);
         setUsers(prevUsers => prevUsers.filter(u => u.id !== values.id));
-
     };
+
+    // Determine if the role selection should be disabled
+    const canChangeRole = principal.role === 'admin' && user.role !== 'admin';
 
     return (
         <div>
@@ -73,10 +89,11 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user, setUsers }) => {
                                 id="role"
                                 value={values.role}
                                 onChange={handleChange}
+                                disabled={!canChangeRole}
                             >
                                 <option value="admin">Admin</option>
-                                <option value="project manager">Project Manager</option>
-                                <option value="developer">Developer</option>
+                                <option value="manager">Project Manager</option>
+                                <option value="DEVELOPER">Developer</option>
                             </Input>
                         </FormGroup>
                     </Col>
